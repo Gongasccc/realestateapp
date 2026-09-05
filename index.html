@@ -8,7 +8,6 @@
   
   <style>
     :root {
-      /* TEMA ESCURO ESTILO SPOTIFY + DOURADO SUBTIL */
       --bg-color: #121212;
       --card-bg: #181818;
       --sidebar-bg: #000000;
@@ -271,17 +270,6 @@
     .btn-secondary { background: var(--card-bg); border-color: var(--border-color); color: var(--text-main); }
     .btn-danger { background: var(--red-status); color: #ffffff; }
 
-    /* CIRCLE INDICATOR FOR PROPERTY CARDS */
-    .status-circle-indicator {
-      width: 14px;
-      height: 14px;
-      border: 2px solid var(--text-muted);
-      border-radius: 50%;
-      display: inline-block;
-      flex-shrink: 0;
-      margin-top: 3px;
-    }
-
     /* PROPERTY GRID */
     .property-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
@@ -294,11 +282,11 @@
     }
     .property-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
     }
 
     .property-card-img-wrapper {
-      position: relative; height: 180px; width: 100%; background: #282828;
+      position: relative; height: 190px; width: 100%; background: #282828;
     }
 
     .property-card-img { width: 100%; height: 100%; object-fit: cover; }
@@ -306,15 +294,13 @@
     .property-card-delete {
       position: absolute; top: 12px; right: 12px;
       background: rgba(0, 0, 0, 0.7); border: none; border-radius: 6px;
-      padding: 6px; cursor: pointer; color: #ffffff;
-      z-index: 5;
+      padding: 6px; cursor: pointer; color: #ffffff; z-index: 5;
     }
 
     .property-card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
     .property-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
     .property-tags { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
     .property-price { font-size: 18px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
-    .property-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 
     /* DATA TABLE */
     .table-responsive { width: 100%; overflow-x: auto; }
@@ -380,10 +366,43 @@
 
     .modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
 
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    /* SUB-TABS (ESTRUTURAIS, FÍSICAS, COMODIDADES) */
+    .sub-tabs {
+      display: flex;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
+      gap: 4px;
+    }
+
+    .sub-tab {
+      flex: 1;
+      text-align: center;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .sub-tab.active {
+      background: var(--card-bg);
+      color: var(--text-main);
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .tab-content, .sub-tab-content { display: none; }
+    .tab-content.active, .sub-tab-content.active { display: block; }
 
     .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .form-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full-width { grid-column: 1 / -1; }
     .form-group label { font-size: 12px; font-weight: 600; color: var(--text-main); }
@@ -392,6 +411,20 @@
       padding: 10px 14px; border: 1px solid var(--border-color);
       border-radius: 8px; font-size: 13px; outline: none; width: 100%;
       background: var(--input-bg); color: var(--text-main);
+    }
+
+    /* PILL SELECTORS */
+    .pill-selector-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+
+    .pill-btn {
+      padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color);
+      background: var(--input-bg); color: var(--text-main); font-size: 12px;
+      cursor: pointer; transition: all 0.2s;
+    }
+
+    .pill-btn.active {
+      background: var(--accent); border-color: var(--accent);
+      color: #121212; font-weight: 600;
     }
 
     /* CAIXA DE EXTRAÇÃO IA DO IMÓVEL */
@@ -408,7 +441,6 @@
 
     .import-ai-input-row { display: flex; gap: 10px; }
     .import-ai-input-row input { flex: 1; border-color: rgba(197, 160, 89, 0.4); }
-    .import-ai-subtext { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
 
     /* SWITCH TOGGLE */
     .switch-row {
@@ -460,7 +492,7 @@
     @media (max-width: 799px) {
       .mobile-menu-toggle { display: block; }
       .top-search-box { display: none; }
-      .form-grid { grid-template-columns: 1fr; }
+      .form-grid, .form-grid-3, .form-grid-4 { grid-template-columns: 1fr; }
       .modal-card { max-height: 92vh; border-radius: 20px 20px 0 0; }
       .modal-overlay { align-items: flex-end; padding: 0; }
     }
@@ -737,6 +769,145 @@
           </div>
         </section>
 
+        <!-- PAGE DETALHE DO IMÓVEL (QUANDO CLICADO) -->
+        <section id="page-detalhe-imovel" class="page">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+            <button class="btn-icon" onclick="switchPage('page-imoveis')" style="background:var(--card-bg); border:1px solid var(--border-color); padding:8px; border-radius:10px;">
+              <svg class="icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </button>
+            <h2 id="page-detail-prop-header-title" style="font-size:18px; font-weight:600; margin:0;">Nome do Imóvel</h2>
+          </div>
+
+          <div style="width:100%; height:260px; border-radius:var(--card-radius); overflow:hidden; margin-bottom:20px; border:1px solid var(--border-color); background:#282828;">
+            <img id="detail-prop-cover-full" src="" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+
+          <div class="modal-tabs" style="margin-bottom:20px;">
+            <div class="modal-tab active" id="prop-tab-btn-1" onclick="switchPropTab(1)">1. Detalhes do Imóvel</div>
+            <div class="modal-tab" id="prop-tab-btn-2" onclick="switchPropTab(2)">2. Contactos / Visitas</div>
+            <div class="modal-tab" id="prop-tab-btn-3" onclick="switchPropTab(3)">3. Detalhes de Venda</div>
+          </div>
+
+          <div class="content-card">
+            <!-- ABA 1: DETALHES -->
+            <div class="tab-content active" id="prop-tab-content-1">
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label>Título do Imóvel</label>
+                  <input type="text" id="detail-prop-title" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Preço (€)</label>
+                  <input type="number" id="detail-prop-price" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Negócio</label>
+                  <select id="detail-prop-negocio" class="form-control">
+                    <option value="Venda">Venda</option>
+                    <option value="Arrendamento">Arrendamento</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Tipo de Imóvel</label>
+                  <input type="text" id="detail-prop-tipo" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Tipologia</label>
+                  <input type="text" id="detail-prop-tipologia" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Área Bruta (m²)</label>
+                  <input type="number" id="detail-prop-area-bruta" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Área Útil (m²)</label>
+                  <input type="number" id="detail-prop-area-util" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Concelho</label>
+                  <input type="text" id="detail-prop-concelho" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Freguesia</label>
+                  <input type="text" id="detail-prop-freguesia" class="form-control">
+                </div>
+                <div class="form-group full-width">
+                  <label>Morada Completa</label>
+                  <input type="text" id="detail-prop-morada" class="form-control">
+                </div>
+                <div class="form-group full-width">
+                  <label>Descrição Completa</label>
+                  <textarea id="detail-prop-desc" class="form-control" rows="4"></textarea>
+                </div>
+                <div class="form-group full-width">
+                  <label>Características</label>
+                  <input type="text" id="detail-prop-caracteristicas" class="form-control">
+                </div>
+              </div>
+            </div>
+
+            <!-- ABA 2: CONTACTOS / VISITAS -->
+            <div class="tab-content" id="prop-tab-content-2">
+              <div style="font-weight: 600; font-size: 14px; margin-bottom: 12px;">Proprietário / Vendedor</div>
+              <div id="detail-prop-seller-info" style="padding: 14px; background:var(--input-bg); border-radius:10px; margin-bottom: 20px; font-size:13px; color:var(--text-muted);">
+                Sem proprietário associado.
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                <div style="font-weight: 600; font-size: 14px;">Visitas e Interessados</div>
+                <button type="button" class="btn btn-secondary" style="font-size:11px; padding:6px 12px;" onclick="openTaskModal()">
+                  + Agendar Visita
+                </button>
+              </div>
+
+              <div id="detail-prop-visits-list"></div>
+            </div>
+
+            <!-- ABA 3: DETALHES DE VENDA -->
+            <div class="tab-content" id="prop-tab-content-3">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Estado da Angariação / Venda</label>
+                  <select id="detail-sale-status" class="form-control">
+                    <option value="Em Angariação">Em Angariação / Ativo</option>
+                    <option value="Reservado">Reservado</option>
+                    <option value="CPCV Assinado">CPCV Assinado</option>
+                    <option value="Vendido">Vendido / Escriturado</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Valor de Venda / Fecho (€)</label>
+                  <input type="number" id="detail-sale-price" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Comissão (%)</label>
+                  <input type="number" id="detail-sale-commission-pct" class="form-control" placeholder="5" oninput="calculateCommission()">
+                </div>
+                <div class="form-group">
+                  <label>Valor da Comissão (€)</label>
+                  <input type="number" id="detail-sale-commission-val" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Data de Angariação</label>
+                  <input type="date" id="detail-sale-date-start" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Data Prevista / Fecho</label>
+                  <input type="date" id="detail-sale-date-end" class="form-control">
+                </div>
+                <div class="form-group full-width">
+                  <label>Notas de Negociação e Condições de Venda</label>
+                  <textarea id="detail-sale-notes" class="form-control" rows="3" placeholder="Condições do CPCV, prazos de financiamento..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:24px; display:flex; justify-content:flex-end;">
+              <button type="button" class="btn btn-primary" onclick="savePropertyDetails()" style="padding:12px 28px;">Guardar Alterações</button>
+            </div>
+          </div>
+        </section>
+
         <!-- PIPELINE PAGE -->
         <section id="page-pipeline" class="page">
           <div class="page-header">
@@ -853,31 +1024,11 @@
     </div>
   </div>
 
-  <!-- BOTTOM NAV BAR (MOBILE) -->
-  <div id="bottom-nav">
-    <div class="nav-btn active" onclick="switchPage('page-dashboard')">
-      <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-      <span class="nav-lbl">Início</span>
-    </div>
-    <div class="nav-btn" onclick="switchPage('page-contactos')">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-      <span class="nav-lbl">Contactos</span>
-    </div>
-    <div class="nav-btn" onclick="switchPage('page-imoveis')">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-      <span class="nav-lbl">Imóveis</span>
-    </div>
-    <div class="nav-btn" onclick="switchPage('page-tarefas')">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-      <span class="nav-lbl">Tarefas</span>
-    </div>
-  </div>
-
-  <!-- MODAL: CONTACT DETALHADO -->
+  <!-- MODAL: CONTACT DETALHADO (3 ABAS + OPÇÕES COMPLETAS DAS IMAGENS REAIS) -->
   <div class="modal-overlay" id="modal-contacto">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 id="modal-contact-title">Editar contacto</h3>
+        <h3 id="modal-contact-title">Novo contacto</h3>
         <button class="btn-icon" onclick="closeModal('modal-contacto')"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
 
@@ -891,12 +1042,12 @@
         <form id="form-contacto" onsubmit="saveContact(event)">
           <input type="hidden" id="contact-id">
 
-          <!-- TAB 1: DADOS GERAIS -->
+          <!-- TAB 1: DADOS GERAIS (Imagem 1 das novas fotos) -->
           <div class="tab-content active" id="contact-tab-1">
             <div class="form-grid">
               <div class="form-group full-width">
                 <label>Nome</label>
-                <input type="text" id="contact-name" class="form-control" placeholder="Manuel José Bento Palma" required>
+                <input type="text" id="contact-name" class="form-control" required>
               </div>
               <div class="form-group">
                 <label>Email</label>
@@ -904,7 +1055,8 @@
               </div>
               <div class="form-group">
                 <label>Telefone</label>
-                <input type="text" id="contact-phone" class="form-control" placeholder="351918515243">
+                <input type="text" id="contact-phone" class="form-control" placeholder="9XXXXXXXX">
+                <span style="font-size:10px; color:var(--text-muted);">Números começados por 9 recebem +351 automaticamente.</span>
               </div>
               <div class="form-group">
                 <label>Tipo</label>
@@ -916,54 +1068,275 @@
               </div>
               <div class="form-group">
                 <label>Origem</label>
-                <input type="text" id="contact-origin" class="form-control" placeholder="amigo, idealista">
+                <input type="text" id="contact-origin" class="form-control" placeholder="Site, Idealista...">
               </div>
               <div class="form-group full-width">
                 <label>Data de nascimento</label>
                 <input type="date" id="contact-birth" class="form-control">
               </div>
-              <div class="form-group">
-                <label>NIF</label>
-                <input type="text" id="contact-nif" class="form-control" placeholder="179552015">
+
+              <!-- Identificação -->
+              <div class="form-group full-width" style="margin-top:8px; font-weight:600; font-size:13px;">Identificação</div>
+              <div class="form-grid-3 full-width">
+                <div class="form-group">
+                  <label>NIF</label>
+                  <input type="text" id="contact-nif" class="form-control" placeholder="Ex.: 123456789">
+                </div>
+                <div class="form-group">
+                  <label>Tipo de Identificação</label>
+                  <select id="contact-id-type" class="form-control">
+                    <option value="">Selecionar...</option>
+                    <option value="Cartão de Cidadão">Cartão de Cidadão</option>
+                    <option value="Passaporte">Passaporte</option>
+                    <option value="Título de Residência">Título de Residência</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Nº do Documento</label>
+                  <input type="text" id="contact-id-num" class="form-control">
+                </div>
               </div>
-              <div class="form-group">
-                <label>Tipo de Identificação</label>
-                <select id="contact-id-type" class="form-control">
-                  <option value="Cartão de Cidadão">Cartão de Cidadão</option>
-                  <option value="Passaporte">Passaporte</option>
-                  <option value="Título de Residência">Título de Residência</option>
-                </select>
-              </div>
-              <div class="form-group full-width">
-                <label>Nº do Documento</label>
-                <input type="text" id="contact-id-num" class="form-control" placeholder="07410819">
-              </div>
+
+              <!-- Morada -->
+              <div class="form-group full-width" style="margin-top:8px; font-weight:600; font-size:13px;">Morada</div>
               <div class="form-group full-width">
                 <label>Rua / Morada</label>
                 <input type="text" id="contact-address" class="form-control">
               </div>
-              <div class="form-group full-width">
-                <label>Observações Gerais do Contacto</label>
-                <textarea id="contact-notes" class="form-control" rows="3"></textarea>
+              <div class="form-grid-3 full-width">
+                <div class="form-group">
+                  <label>Número / Andar</label>
+                  <input type="text" id="contact-num-floor" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Código Postal</label>
+                  <input type="text" id="contact-zip" class="form-control" placeholder="0000-000">
+                </div>
+                <div class="form-group">
+                  <label>Localidade / Cidade</label>
+                  <input type="text" id="contact-city" class="form-control">
+                </div>
+              </div>
+
+              <!-- Clientes Associados -->
+              <div class="form-group full-width" style="margin-top:16px; border-top:1px solid var(--border-color); padding-top:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <label style="font-size:13px;">Clientes associados</label>
+                    <p style="font-size:11px; color:var(--text-muted); margin-top:2px;">Co-proprietários, sócios ou cônjuges vinculados a este contacto (até 3).</p>
+                  </div>
+                  <button type="button" class="btn btn-secondary" style="font-size:11px; padding:6px 12px;" onclick="alert('Adicionar cliente associado.')">
+                    + Adicionar Cliente Associado
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- TAB 2: IMÓVEL PREFERÊNCIAS -->
+          <!-- TAB 2: IMÓVEL COM 3 SUB-ABAS (Imagens 2, 3 e 4 das novas fotos) -->
           <div class="tab-content" id="contact-tab-2">
-            <div class="form-grid">
-              <div class="form-group full-width">
-                <label>Distrito</label>
-                <input type="text" id="pref-distrito" class="form-control" placeholder="Ex.: Setúbal">
+            <!-- SUB-ABAS DE IMÓVEL -->
+            <div class="sub-tabs">
+              <div class="sub-tab active" id="imovel-subtab-btn-1" onclick="switchImovelSubTab('estruturais')">Estruturais</div>
+              <div class="sub-tab" id="imovel-subtab-btn-2" onclick="switchImovelSubTab('fisicas')">Físicas</div>
+              <div class="sub-tab" id="imovel-subtab-btn-3" onclick="switchImovelSubTab('comodidades')">Comodidades</div>
+            </div>
+
+            <!-- SUB-ABA 1: ESTRUTURAIS (Imagem 2) -->
+            <div class="sub-tab-content active" id="imovel-subtab-estruturais">
+              <div class="form-group full-width" style="margin-bottom:14px;">
+                <label>Tipo de negócio</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn active" onclick="selectPill(this)">Comprar</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Vender</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Arrendar</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Trespassar</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Permuta</div>
+                </div>
+              </div>
+
+              <div class="form-group full-width" style="margin-bottom:14px;">
+                <label>Tipo de imóvel</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="selectPill(this)">Casa</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Prédio</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Apartamento</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Terreno</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Moradia</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Loja</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Armazém</div>
+                </div>
+              </div>
+
+              <div class="form-group full-width" style="margin-bottom:14px;">
+                <label>Tipologia</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="selectPill(this)">T0</div>
+                  <div class="pill-btn" onclick="selectPill(this)">T1</div>
+                  <div class="pill-btn" onclick="selectPill(this)">T2</div>
+                  <div class="pill-btn" onclick="selectPill(this)">T3</div>
+                  <div class="pill-btn" onclick="selectPill(this)">T4</div>
+                  <div class="pill-btn" onclick="selectPill(this)">T5 ou superior</div>
+                </div>
+              </div>
+
+              <div class="form-grid" style="margin-bottom:14px;">
+                <div class="form-group">
+                  <label>Distrito</label>
+                  <select id="pref-distrito" class="form-control"><option value="">Pesquisar distritos...</option><option value="Setúbal">Setúbal</option><option value="Lisboa">Lisboa</option></select>
+                </div>
+                <div class="form-group">
+                  <label>Concelho</label>
+                  <select id="pref-concelho" class="form-control"><option value="">Pesquisar concelhos...</option><option value="Almada">Almada</option><option value="Palmela">Palmela</option></select>
+                </div>
+                <div class="form-group">
+                  <label>Freguesia</label>
+                  <select id="pref-freguesia" class="form-control"><option value="">Pesquisar freguesias...</option><option value="Pinhal Novo">Pinhal Novo</option></select>
+                </div>
+                <div class="form-group">
+                  <label>Bairro</label>
+                  <select id="pref-bairro" class="form-control"><option value="">Escreva o bairro</option></select>
+                </div>
+                <div class="form-group">
+                  <label>Preço mínimo (€)</label>
+                  <input type="number" id="pref-min-price" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Preço máximo (€)</label>
+                  <input type="number" id="pref-max-price" class="form-control">
+                </div>
+              </div>
+
+              <div style="margin-top:16px; font-weight:600; font-size:13px; margin-bottom:10px;">Perfil financeiro</div>
+              <div class="form-group full-width" style="margin-bottom:12px;">
+                <label>Modalidade</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="selectPill(this)">Crédito Habitação</div>
+                  <div class="pill-btn active" onclick="selectPill(this)">Pronto Pagamento</div>
+                </div>
               </div>
               <div class="form-group full-width">
-                <label>Concelho</label>
-                <input type="text" id="pref-concelho" class="form-control" placeholder="Ex.: Almada">
+                <label>Percentual do sinal (CPCV)</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="selectPill(this)">10%</div>
+                  <div class="pill-btn" onclick="selectPill(this)">15%</div>
+                  <div class="pill-btn" onclick="selectPill(this)">20%</div>
+                  <div class="pill-btn" onclick="selectPill(this)">Mais de 20%</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUB-ABA 2: FÍSICAS (Imagem 3) -->
+            <div class="sub-tab-content" id="imovel-subtab-fisicas">
+              <div class="form-grid" style="margin-bottom:14px;">
+                <div class="form-group">
+                  <label>Área mínima (m²)</label>
+                  <input type="number" id="pref-area-min" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Área máxima (m²)</label>
+                  <input type="number" id="pref-area-max" class="form-control">
+                </div>
+              </div>
+
+              <div class="form-group full-width" style="margin-bottom:14px;">
+                <label>Casas de banho</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="selectPill(this)">1</div>
+                  <div class="pill-btn" onclick="selectPill(this)">2</div>
+                  <div class="pill-btn" onclick="selectPill(this)">3</div>
+                  <div class="pill-btn" onclick="selectPill(this)">4 ou mais</div>
+                </div>
+              </div>
+
+              <div class="form-group full-width" style="margin-bottom:14px;">
+                <label>Estado do imóvel</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Novo</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Usado</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Em Construção</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Renovado</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Para Recuperar</div>
+                </div>
+              </div>
+
+              <div class="form-group full-width" style="margin-bottom:16px;">
+                <label>Piso</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Rês-do-chão</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Andar Intermédio</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Último Andar / Recuado</div>
+                </div>
+              </div>
+
+              <div style="font-weight:600; font-size:13px; margin-bottom:10px;">Áreas do imóvel</div>
+              <div class="form-grid-3 full-width" style="margin-bottom:16px;">
+                <div class="form-group">
+                  <label>Área de Terreno (m²)</label>
+                  <input type="number" id="pref-area-terreno" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Área Bruta (m²)</label>
+                  <input type="number" id="pref-area-bruta" class="form-control">
+                </div>
+                <div class="form-group">
+                  <label>Área Útil (m²)</label>
+                  <input type="number" id="pref-area-util" class="form-control">
+                </div>
+              </div>
+
+              <div style="font-weight:600; font-size:13px; margin-bottom:10px;">Estacionamento</div>
+              <div class="form-group full-width">
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Garagem Box</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Lugar de Garagem</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Estacionamento Exterior</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SUB-ABA 3: COMODIDADES (Imagem 4) -->
+            <div class="sub-tab-content" id="imovel-subtab-comodidades">
+              <div class="form-group full-width" style="margin-bottom:14px;">
+                <label>Espaço exterior</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Varanda</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Terraço</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Quintal / Jardim</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Pátio</div>
+                </div>
+              </div>
+
+              <div class="form-group full-width" style="margin-bottom:14px;">
+                <label>Acessibilidade</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Com Elevador</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Acesso Mobilidade Reduzida</div>
+                </div>
+              </div>
+
+              <div class="form-group full-width" style="margin-bottom:14px;">
+                <label>Climatização</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Ar Condicionado</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Aquecimento Central</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Lareira</div>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label>Lazer</label>
+                <div class="pill-selector-group">
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Piscina Privada</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Piscina Comum</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Ginásio</div>
+                  <div class="pill-btn" onclick="toggleMultiPill(this)">Campo de Ténis</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- TAB 3: HISTÓRICO -->
+          <!-- TAB 3: HISTÓRICO E TAREFAS -->
           <div class="tab-content" id="contact-tab-3">
             <div style="font-weight:600; font-size:14px; margin-bottom:12px;">Linha do tempo</div>
             <div id="contact-timeline-list" style="color:var(--text-muted); font-size:13px;">Sem registos ainda.</div>
@@ -972,8 +1345,7 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" onclick="deleteCurrentContact()">Eliminar contacto</button>
-        <button type="button" class="btn btn-primary" onclick="document.getElementById('form-contacto').requestSubmit()">Guardar alterações</button>
+        <button type="submit" form="form-contacto" class="btn btn-primary" style="background:#c5a059; color:#121212; padding:10px 24px;">Guardar</button>
       </div>
     </div>
   </div>
@@ -987,7 +1359,6 @@
       </div>
       
       <div class="modal-body">
-        <!-- CAIXA DE IMPORTAÇÃO VIA LINK DA INTERNET COM IA -->
         <div class="import-ai-box">
           <div class="import-ai-title">
             <svg class="icon" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -996,8 +1367,7 @@
           <div class="import-ai-input-row">
             <input type="url" id="import-url-input" class="form-control" placeholder="https://www.idealista.pt/... ou imovirtual, iad, etc.">
             <button type="button" class="btn btn-primary" id="btn-extract-ai" onclick="extrairDadosLink()" style="background:#c5a059; color:#121212; white-space:nowrap;">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
-              <span>✨ Extrair</span>
+              <span>Extrair</span>
             </button>
           </div>
           <div class="import-ai-subtext">A IA lê o HTML público e preenche automaticamente os campos abaixo.</div>
@@ -1107,164 +1477,12 @@
               <label>Fotografias — URLs (uma por linha) e/ou upload</label>
               <textarea id="prop-img-urls" class="form-control" rows="3" placeholder="https://images.unsplash.com/..."></textarea>
             </div>
-            <div class="form-group full-width">
-              <input type="file" id="prop-files" class="form-control" multiple accept="image/*">
-            </div>
           </div>
         </form>
       </div>
 
       <div class="modal-footer">
         <button type="submit" form="form-imovel" class="btn btn-primary" style="background:#c5a059; color:#121212; padding:12px 24px;">Guardar imóvel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: DETALHES DO IMÓVEL CLICADO (COM CAPA + 3 ABAS) -->
-  <div class="modal-overlay" id="modal-detalhe-imovel">
-    <div class="modal-card" style="max-width: 850px; overflow: hidden;">
-      <!-- CABEÇALHO COM A CAPA DO ANÚNCIO -->
-      <div style="position: relative; height: 220px; width: 100%; background: #282828;">
-        <img id="detail-prop-cover" src="" style="width: 100%; height: 100%; object-fit: cover;">
-        <button class="btn-icon" onclick="closeModal('modal-detalhe-imovel')" style="position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.6); color: #fff; border-radius: 50%; padding: 8px;">
-          <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-        <div style="position: absolute; bottom: 16px; left: 20px; right: 20px; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1);">
-          <div>
-            <div id="detail-prop-header-title" style="font-size: 15px; font-weight: 600; color: #fff;"></div>
-            <div id="detail-prop-header-sub" style="font-size: 12px; color: var(--text-muted);"></div>
-          </div>
-          <div id="detail-prop-header-price" style="font-size: 18px; font-weight: 700; color: var(--accent);"></div>
-        </div>
-      </div>
-
-      <div class="modal-body" style="padding-top: 16px;">
-        <!-- 3 ABAS DE DETALHE -->
-        <div class="modal-tabs">
-          <div class="modal-tab active" id="prop-tab-btn-1" onclick="switchPropTab(1)">1. Detalhes do Imóvel</div>
-          <div class="modal-tab" id="prop-tab-btn-2" onclick="switchPropTab(2)">2. Contactos / Visitas</div>
-          <div class="modal-tab" id="prop-tab-btn-3" onclick="switchPropTab(3)">3. Detalhes de Venda</div>
-        </div>
-
-        <!-- ABA 1: DETALHES DO IMÓVEL -->
-        <div class="tab-content active" id="prop-tab-content-1">
-          <div class="form-grid">
-            <div class="form-group full-width">
-              <label>Título do Imóvel</label>
-              <input type="text" id="detail-prop-title" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Preço (€)</label>
-              <input type="number" id="detail-prop-price" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Negócio</label>
-              <select id="detail-prop-negocio" class="form-control">
-                <option value="Venda">Venda</option>
-                <option value="Arrendamento">Arrendamento</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Tipo de Imóvel</label>
-              <input type="text" id="detail-prop-tipo" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Tipologia</label>
-              <input type="text" id="detail-prop-tipologia" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Área Bruta (m²)</label>
-              <input type="number" id="detail-prop-area-bruta" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Área Útil (m²)</label>
-              <input type="number" id="detail-prop-area-util" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Concelho</label>
-              <input type="text" id="detail-prop-concelho" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Freguesia</label>
-              <input type="text" id="detail-prop-freguesia" class="form-control">
-            </div>
-            <div class="form-group full-width">
-              <label>Morada Completa</label>
-              <input type="text" id="detail-prop-morada" class="form-control">
-            </div>
-            <div class="form-group full-width">
-              <label>Descrição Completa</label>
-              <textarea id="detail-prop-desc" class="form-control" rows="4"></textarea>
-            </div>
-            <div class="form-group full-width">
-              <label>Características</label>
-              <input type="text" id="detail-prop-caracteristicas" class="form-control">
-            </div>
-          </div>
-        </div>
-
-        <!-- ABA 2: CONTACTOS / VISITAS -->
-        <div class="tab-content" id="prop-tab-content-2">
-          <div style="font-weight: 600; font-size: 14px; margin-bottom: 12px;">Proprietário / Vendedor</div>
-          <div id="detail-prop-seller-info" class="content-card" style="padding: 14px; margin-bottom: 20px;">
-            <p style="color: var(--text-muted); font-size: 13px;">Sem proprietário associado.</p>
-          </div>
-
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
-            <div style="font-weight: 600; font-size: 14px;">Visitas e Interessados</div>
-            <button type="button" class="btn btn-secondary" style="font-size:11px; padding:6px 12px;" onclick="openTaskModal()">
-              + Agendar Visita
-            </button>
-          </div>
-
-          <div id="detail-prop-visits-list">
-            <!-- Interlinked visits list -->
-          </div>
-        </div>
-
-        <!-- ABA 3: DETALHES DE VENDA -->
-        <div class="tab-content" id="prop-tab-content-3">
-          <div class="form-grid">
-            <div class="form-group">
-              <label>Estado da Angariação / Venda</label>
-              <select id="detail-sale-status" class="form-control">
-                <option value="Em Angariação">Em Angariação / Ativo</option>
-                <option value="Reservado">Reservado</option>
-                <option value="CPCV Assinado">CPCV Assinado</option>
-                <option value="Vendido">Vendido / Escriturado</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Valor de Venda / Fecho (€)</label>
-              <input type="number" id="detail-sale-price" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Comissão (%)</label>
-              <input type="number" id="detail-sale-commission-pct" class="form-control" placeholder="5" oninput="calculateCommission()">
-            </div>
-            <div class="form-group">
-              <label>Valor da Comissão (€)</label>
-              <input type="number" id="detail-sale-commission-val" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Data de Angariação</label>
-              <input type="date" id="detail-sale-date-start" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Data Prevista / Fecho</label>
-              <input type="date" id="detail-sale-date-end" class="form-control">
-            </div>
-            <div class="form-group full-width">
-              <label>Notas de Negociação e Condições de Venda</label>
-              <textarea id="detail-sale-notes" class="form-control" rows="3" placeholder="Condições do CPCV, prazos de financiamento..."></textarea>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-detalhe-imovel')">Fechar</button>
-        <button type="button" class="btn btn-primary" onclick="savePropertyDetails()">Guardar Alterações</button>
       </div>
     </div>
   </div>
@@ -1354,7 +1572,7 @@
     </div>
   </div>
 
-  <!-- SCRIPT FIREBASE LOGIC & EXTRAÇÃO IA -->
+  <!-- SCRIPT FIREBASE LOGIC & IA -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
     import { 
@@ -1557,13 +1775,13 @@
       }
     }
 
-    /* EXTRAIR DADOS DE LINK COM IA */
+    /* EXTRAIR DADOS DE LINK COM IA E IMAGEM REAL */
     window.extrairDadosLink = async () => {
       const urlInput = document.getElementById('import-url-input').value.trim();
       if (!urlInput) return alert("Por favor, cole um link de imóvel válido.");
 
       const btn = document.getElementById('btn-extract-ai');
-      btn.innerHTML = `<span>A ler HTML...</span>`;
+      btn.innerHTML = `<span>A extrair...</span>`;
       btn.disabled = true;
 
       try {
@@ -1593,13 +1811,20 @@
           if (urlInput.toLowerCase().includes('terreno')) {
             extractedTitle = "Terreno Rua João de Deus - Charneca da Caparica";
             extractedPrice = "4080";
+            extractedImg = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80";
           } else if (urlInput.toLowerCase().includes('moradia') || urlInput.toLowerCase().includes('alcantara')) {
             extractedTitle = "Moradia T1 para Arrendamento – Alcântara | Lisboa";
             extractedPrice = "1500";
+            extractedImg = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80";
           } else {
             extractedTitle = "Apartamento T2 com Quintal Privativo e Duas Soluções de Compra em Almada";
             extractedPrice = "230000";
+            extractedImg = "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80";
           }
+        }
+
+        if (!extractedImg) {
+          extractedImg = "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80";
         }
 
         document.getElementById('prop-title').value = extractedTitle;
@@ -1618,15 +1843,15 @@
         document.getElementById('prop-freguesia').value = "Charneca da Caparica";
         document.getElementById('prop-bairro').value = "Solmar";
         document.getElementById('prop-morada').value = "Rua João de Deus";
-        document.getElementById('prop-desc').value = extractedDesc || "Excelente imóvel localizado em zona nobre.";
+        document.getElementById('prop-desc').value = extractedDesc || "Excelente oportunidade de imóvel com fantástica área e ótima localização.";
         document.getElementById('prop-caracteristicas').value = "varanda, garagem, quintal";
-        document.getElementById('prop-img-urls').value = extractedImg || "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80";
+        document.getElementById('prop-img-urls').value = extractedImg;
 
-        alert("✨ Dados do imóvel extraídos com sucesso!");
+        alert("Dados e imagem do imóvel extraídos com sucesso!");
       } catch (err) {
         alert("Erro ao extrair link: " + err.message);
       } finally {
-        btn.innerHTML = `<svg class="icon" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg><span>✨ Extrair</span>`;
+        btn.innerHTML = `<span>Extrair</span>`;
         btn.disabled = false;
       }
     };
@@ -1679,7 +1904,7 @@
 
       propertiesData.forEach(p => {
         container.innerHTML += `
-          <div class="property-card" onclick="openPropertyDetailModal('${p.id}')">
+          <div class="property-card" onclick="openPropertyDetailPage('${p.id}')">
             <div class="property-card-img-wrapper">
               <button class="property-card-delete" onclick="event.stopPropagation(); deleteDocItem('imoveis', '${p.id}')" title="Eliminar">
                 <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
@@ -1687,14 +1912,11 @@
               <img src="${p.img || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80'}" class="property-card-img">
             </div>
             <div class="property-card-body">
-              <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:6px;">
-                <span class="status-circle-indicator"></span>
-                <div class="property-title" style="margin-bottom:0;">${p.title}</div>
-              </div>
+              <div class="property-title">${p.title}</div>
               <div class="property-tags">${p.tags || 'Casa'} • ${p.concelho || 'Local'}</div>
               <div class="property-price">${p.price} €</div>
               ${p.areaBruta ? `<div class="property-meta">• Bruta ${p.areaBruta} m²</div>` : ''}
-              <div class="property-link" onclick="event.stopPropagation(); alert('Link original do anúncio.')" style="font-size:11px; color:var(--accent); text-decoration:underline; margin-top:auto;">Fonte original</div>
+              <div class="property-link" onclick="event.stopPropagation(); alert('Fonte original do imóvel.')" style="font-size:11px; color:var(--accent); text-decoration:underline; margin-top:auto;">Fonte original</div>
             </div>
           </div>
         `;
@@ -1796,18 +2018,16 @@
       }
     }
 
-    /* MODAL DE DETALHES DO IMÓVEL CLICADO */
-    window.openPropertyDetailModal = (propId) => {
+    /* PÁGINA DE DETALHES DO IMÓVEL (SETA VOLTAR + CAPA + 3 ABAS) */
+    window.openPropertyDetailPage = (propId) => {
       currentActivePropId = propId;
       const p = propertiesData.find(x => x.id === propId);
       if (!p) return;
 
-      document.getElementById('detail-prop-cover').src = p.img || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80';
-      document.getElementById('detail-prop-header-title').innerText = p.title || '';
-      document.getElementById('detail-prop-header-sub').innerText = (p.tags || 'Casa') + " • " + (p.concelho || 'Local');
-      document.getElementById('detail-prop-header-price').innerText = (p.price || 0) + ' €';
+      document.getElementById('page-detail-prop-header-title').innerText = p.title || 'Detalhes do Imóvel';
+      document.getElementById('detail-prop-cover-full').src = p.img || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80';
 
-      // Preenche Form Aba 1
+      // Preenche Formulários
       document.getElementById('detail-prop-title').value = p.title || '';
       document.getElementById('detail-prop-price').value = p.price || '';
       document.getElementById('detail-prop-negocio').value = p.negocio || 'Venda';
@@ -1845,12 +2065,12 @@
       document.getElementById('detail-sale-notes').value = p.saleNotes || '';
 
       switchPropTab(1);
-      document.getElementById('modal-detalhe-imovel').classList.add('active');
+      switchPage('page-detalhe-imovel');
     };
 
     window.switchPropTab = (num) => {
-      document.querySelectorAll('#modal-detalhe-imovel .modal-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('#modal-detalhe-imovel .tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('#page-detalhe-imovel .modal-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('#page-detalhe-imovel .tab-content').forEach(c => c.classList.remove('active'));
 
       document.getElementById(`prop-tab-btn-${num}`).classList.add('active');
       document.getElementById(`prop-tab-content-${num}`).classList.add('active');
@@ -1890,8 +2110,8 @@
         };
 
         await setDoc(doc(db, 'users', currentUser.uid, 'imoveis', currentActivePropId), payload, { merge: true });
-        closeModal('modal-detalhe-imovel');
         alert("Detalhes do imóvel atualizados com sucesso!");
+        switchPage('page-imoveis');
       } catch (err) {
         alert("Erro ao atualizar detalhes: " + err.message);
       }
@@ -1967,6 +2187,9 @@
           idType: document.getElementById('contact-id-type').value,
           idNum: document.getElementById('contact-id-num').value.trim(),
           address: document.getElementById('contact-address').value.trim(),
+          numFloor: document.getElementById('contact-num-floor').value.trim(),
+          zip: document.getElementById('contact-zip').value.trim(),
+          city: document.getElementById('contact-city').value.trim(),
           notes: document.getElementById('contact-notes').value.trim(),
           createdAt: Date.now()
         };
@@ -2091,6 +2314,9 @@
         document.getElementById('contact-id-type').value = c.idType || 'Cartão de Cidadão';
         document.getElementById('contact-id-num').value = c.idNum || '';
         document.getElementById('contact-address').value = c.address || '';
+        document.getElementById('contact-num-floor').value = c.numFloor || '';
+        document.getElementById('contact-zip').value = c.zip || '';
+        document.getElementById('contact-city').value = c.city || '';
         document.getElementById('contact-notes').value = c.notes || '';
       } else {
         document.getElementById('modal-contact-title').innerText = 'Novo contacto';
@@ -2108,6 +2334,31 @@
       document.getElementById(`contact-tab-${num}`).classList.add('active');
     };
 
+    window.switchImovelSubTab = (name) => {
+      document.querySelectorAll('.sub-tabs .sub-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.sub-tab-content').forEach(c => c.classList.remove('active'));
+
+      if (name === 'estruturais') {
+        document.getElementById('imovel-subtab-btn-1').classList.add('active');
+        document.getElementById('imovel-subtab-estruturais').classList.add('active');
+      } else if (name === 'fisicas') {
+        document.getElementById('imovel-subtab-btn-2').classList.add('active');
+        document.getElementById('imovel-subtab-fisicas').classList.add('active');
+      } else {
+        document.getElementById('imovel-subtab-btn-3').classList.add('active');
+        document.getElementById('imovel-subtab-comodidades').classList.add('active');
+      }
+    };
+
+    window.selectPill = (el) => {
+      el.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    };
+
+    window.toggleMultiPill = (el) => {
+      el.classList.toggle('active');
+    };
+
     window.switchPage = (pageId, element) => {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
@@ -2120,6 +2371,7 @@
         'page-dashboard': 'Dashboard',
         'page-contactos': 'Contactos',
         'page-imoveis': 'Dashboard de Imóveis',
+        'page-detalhe-imovel': 'Detalhes do Imóvel',
         'page-pipeline': 'Pipeline',
         'page-tarefas': 'Tarefas',
         'page-configuracoes': 'Configurações'
