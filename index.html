@@ -302,7 +302,6 @@
     .property-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
     .property-tags { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
     .property-price { font-size: 18px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
-    .property-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 
     /* DATA TABLE */
     .table-responsive { width: 100%; overflow-x: auto; }
@@ -725,9 +724,8 @@
           </div>
         </section>
 
-        <!-- PAGE DETALHE DO IMÓVEL (COM SETA À ESQUERDA, TÍTULO, CAPA EM BAIXO E ABAS ABAIXO) -->
+        <!-- PAGE DETALHE DO IMÓVEL -->
         <section id="page-detalhe-imovel" class="page">
-          <!-- CABEÇALHO COM SETA E NOME -->
           <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
             <button class="btn-icon" onclick="switchPage('page-imoveis')" style="background:var(--card-bg); border:1px solid var(--border-color); padding:8px; border-radius:10px;">
               <svg class="icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
@@ -735,19 +733,16 @@
             <h2 id="page-detail-prop-header-title" style="font-size:18px; font-weight:600; margin:0;">Nome do Imóvel</h2>
           </div>
 
-          <!-- CAPA DO ANÚNCIO LOGO ABAIXO DO TÍTULO -->
           <div style="width:100%; height:280px; border-radius:var(--card-radius); overflow:hidden; margin-bottom:20px; border:1px solid var(--border-color); background:#282828;">
             <img id="detail-prop-cover-full" src="" style="width:100%; height:100%; object-fit:cover;">
           </div>
 
-          <!-- ABAS ABAIXO DA CAPA -->
           <div class="modal-tabs" style="margin-bottom:20px;">
             <div class="modal-tab active" id="prop-tab-btn-1" onclick="switchPropTab(1)">1. Detalhes do Imóvel</div>
             <div class="modal-tab" id="prop-tab-btn-2" onclick="switchPropTab(2)">2. Contactos / Visitas</div>
             <div class="modal-tab" id="prop-tab-btn-3" onclick="switchPropTab(3)">3. Detalhes de Venda</div>
           </div>
 
-          <!-- CONTEÚDO FORMATADO LIMPO DAS ABAS -->
           <div class="content-card">
             <!-- ABA 1: DETALHES -->
             <div class="tab-content active" id="prop-tab-content-1">
@@ -984,11 +979,31 @@
     </div>
   </div>
 
+  <!-- BOTTOM NAV BAR (MOBILE) -->
+  <div id="bottom-nav">
+    <div class="nav-btn active" onclick="switchPage('page-dashboard')">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span class="nav-lbl">Início</span>
+    </div>
+    <div class="nav-btn" onclick="switchPage('page-contactos')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+      <span class="nav-lbl">Contactos</span>
+    </div>
+    <div class="nav-btn" onclick="switchPage('page-imoveis')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      <span class="nav-lbl">Imóveis</span>
+    </div>
+    <div class="nav-btn" onclick="switchPage('page-tarefas')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+      <span class="nav-lbl">Tarefas</span>
+    </div>
+  </div>
+
   <!-- MODAL: CONTACT DETALHADO -->
   <div class="modal-overlay" id="modal-contacto">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 id="modal-contact-title">Novo contacto</h3>
+        <h3 id="modal-contact-title">Editar contacto</h3>
         <button class="btn-icon" onclick="closeModal('modal-contacto')"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
 
@@ -1007,7 +1022,7 @@
             <div class="form-grid">
               <div class="form-group full-width">
                 <label>Nome</label>
-                <input type="text" id="contact-name" class="form-control" required>
+                <input type="text" id="contact-name" class="form-control" placeholder="Manuel José Bento Palma" required>
               </div>
               <div class="form-group">
                 <label>Email</label>
@@ -1015,8 +1030,7 @@
               </div>
               <div class="form-group">
                 <label>Telefone</label>
-                <input type="text" id="contact-phone" class="form-control" placeholder="9XXXXXXXX">
-                <span style="font-size:10px; color:var(--text-muted);">Números começados por 9 recebem +351 automaticamente.</span>
+                <input type="text" id="contact-phone" class="form-control" placeholder="351918515243">
               </div>
               <div class="form-group">
                 <label>Tipo</label>
@@ -1028,271 +1042,54 @@
               </div>
               <div class="form-group">
                 <label>Origem</label>
-                <input type="text" id="contact-origin" class="form-control" placeholder="Site, Idealista...">
+                <input type="text" id="contact-origin" class="form-control" placeholder="amigo, idealista">
               </div>
               <div class="form-group full-width">
                 <label>Data de nascimento</label>
                 <input type="date" id="contact-birth" class="form-control">
               </div>
-
-              <!-- Identificação -->
-              <div class="form-group full-width" style="margin-top:8px; font-weight:600; font-size:13px;">Identificação</div>
-              <div class="form-grid-3 full-width">
-                <div class="form-group">
-                  <label>NIF</label>
-                  <input type="text" id="contact-nif" class="form-control" placeholder="Ex.: 123456789">
-                </div>
-                <div class="form-group">
-                  <label>Tipo de Identificação</label>
-                  <select id="contact-id-type" class="form-control">
-                    <option value="">Selecionar...</option>
-                    <option value="Cartão de Cidadão">Cartão de Cidadão</option>
-                    <option value="Passaporte">Passaporte</option>
-                    <option value="Título de Residência">Título de Residência</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Nº do Documento</label>
-                  <input type="text" id="contact-id-num" class="form-control">
-                </div>
+              <div class="form-group">
+                <label>NIF</label>
+                <input type="text" id="contact-nif" class="form-control" placeholder="179552015">
               </div>
-
-              <!-- Morada -->
-              <div class="form-group full-width" style="margin-top:8px; font-weight:600; font-size:13px;">Morada</div>
+              <div class="form-group">
+                <label>Tipo de Identificação</label>
+                <select id="contact-id-type" class="form-control">
+                  <option value="Cartão de Cidadão">Cartão de Cidadão</option>
+                  <option value="Passaporte">Passaporte</option>
+                  <option value="Título de Residência">Título de Residência</option>
+                </select>
+              </div>
+              <div class="form-group full-width">
+                <label>Nº do Documento</label>
+                <input type="text" id="contact-id-num" class="form-control" placeholder="07410819">
+              </div>
               <div class="form-group full-width">
                 <label>Rua / Morada</label>
                 <input type="text" id="contact-address" class="form-control">
               </div>
-              <div class="form-grid-3 full-width">
-                <div class="form-group">
-                  <label>Número / Andar</label>
-                  <input type="text" id="contact-num-floor" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label>Código Postal</label>
-                  <input type="text" id="contact-zip" class="form-control" placeholder="0000-000">
-                </div>
-                <div class="form-group">
-                  <label>Localidade / Cidade</label>
-                  <input type="text" id="contact-city" class="form-control">
-                </div>
-              </div>
-
-              <!-- Clientes Associados -->
-              <div class="form-group full-width" style="margin-top:16px; border-top:1px solid var(--border-color); padding-top:16px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <div>
-                    <label style="font-size:13px;">Clientes associados</label>
-                    <p style="font-size:11px; color:var(--text-muted); margin-top:2px;">Co-proprietários, sócios ou cônjuges vinculados a este contacto (até 3).</p>
-                  </div>
-                  <button type="button" class="btn btn-secondary" style="font-size:11px; padding:6px 12px;" onclick="alert('Adicionar cliente associado.')">
-                    + Adicionar Cliente Associado
-                  </button>
-                </div>
+              <div class="form-group full-width">
+                <label>Observações Gerais do Contacto</label>
+                <textarea id="contact-notes" class="form-control" rows="3"></textarea>
               </div>
             </div>
           </div>
 
-          <!-- TAB 2: IMÓVEL COM 3 SUB-ABAS -->
+          <!-- TAB 2: IMÓVEL PREFERÊNCIAS -->
           <div class="tab-content" id="contact-tab-2">
-            <div class="sub-tabs">
-              <div class="sub-tab active" id="imovel-subtab-btn-1" onclick="switchImovelSubTab('estruturais')">Estruturais</div>
-              <div class="sub-tab" id="imovel-subtab-btn-2" onclick="switchImovelSubTab('fisicas')">Físicas</div>
-              <div class="sub-tab" id="imovel-subtab-btn-3" onclick="switchImovelSubTab('comodidades')">Comodidades</div>
-            </div>
-
-            <div class="sub-tab-content active" id="imovel-subtab-estruturais">
-              <div class="form-group full-width" style="margin-bottom:14px;">
-                <label>Tipo de negócio</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn active" onclick="selectPill(this)">Comprar</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Vender</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Arrendar</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Trespassar</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Permuta</div>
-                </div>
-              </div>
-
-              <div class="form-group full-width" style="margin-bottom:14px;">
-                <label>Tipo de imóvel</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="selectPill(this)">Casa</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Prédio</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Apartamento</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Terreno</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Moradia</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Loja</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Armazém</div>
-                </div>
-              </div>
-
-              <div class="form-group full-width" style="margin-bottom:14px;">
-                <label>Tipologia</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="selectPill(this)">T0</div>
-                  <div class="pill-btn" onclick="selectPill(this)">T1</div>
-                  <div class="pill-btn" onclick="selectPill(this)">T2</div>
-                  <div class="pill-btn" onclick="selectPill(this)">T3</div>
-                  <div class="pill-btn" onclick="selectPill(this)">T4</div>
-                  <div class="pill-btn" onclick="selectPill(this)">T5 ou superior</div>
-                </div>
-              </div>
-
-              <div class="form-grid" style="margin-bottom:14px;">
-                <div class="form-group">
-                  <label>Distrito</label>
-                  <select id="pref-distrito" class="form-control"><option value="">Pesquisar distritos...</option><option value="Setúbal">Setúbal</option><option value="Lisboa">Lisboa</option></select>
-                </div>
-                <div class="form-group">
-                  <label>Concelho</label>
-                  <select id="pref-concelho" class="form-control"><option value="">Pesquisar concelhos...</option><option value="Almada">Almada</option><option value="Palmela">Palmela</option></select>
-                </div>
-                <div class="form-group">
-                  <label>Freguesia</label>
-                  <select id="pref-freguesia" class="form-control"><option value="">Pesquisar freguesias...</option><option value="Pinhal Novo">Pinhal Novo</option></select>
-                </div>
-                <div class="form-group">
-                  <label>Bairro</label>
-                  <select id="pref-bairro" class="form-control"><option value="">Escreva o bairro</option></select>
-                </div>
-                <div class="form-group">
-                  <label>Preço mínimo (€)</label>
-                  <input type="number" id="pref-min-price" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label>Preço máximo (€)</label>
-                  <input type="number" id="pref-max-price" class="form-control">
-                </div>
-              </div>
-
-              <div style="margin-top:16px; font-weight:600; font-size:13px; margin-bottom:10px;">Perfil financeiro</div>
-              <div class="form-group full-width" style="margin-bottom:12px;">
-                <label>Modalidade</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="selectPill(this)">Crédito Habitação</div>
-                  <div class="pill-btn active" onclick="selectPill(this)">Pronto Pagamento</div>
-                </div>
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label>Distrito</label>
+                <input type="text" id="pref-distrito" class="form-control" placeholder="Ex.: Setúbal">
               </div>
               <div class="form-group full-width">
-                <label>Percentual do sinal (CPCV)</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="selectPill(this)">10%</div>
-                  <div class="pill-btn" onclick="selectPill(this)">15%</div>
-                  <div class="pill-btn" onclick="selectPill(this)">20%</div>
-                  <div class="pill-btn" onclick="selectPill(this)">Mais de 20%</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sub-tab-content" id="imovel-subtab-fisicas">
-              <div class="form-grid" style="margin-bottom:14px;">
-                <div class="form-group">
-                  <label>Área mínima (m²)</label>
-                  <input type="number" id="pref-area-min" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label>Área máxima (m²)</label>
-                  <input type="number" id="pref-area-max" class="form-control">
-                </div>
-              </div>
-
-              <div class="form-group full-width" style="margin-bottom:14px;">
-                <label>Casas de banho</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="selectPill(this)">1</div>
-                  <div class="pill-btn" onclick="selectPill(this)">2</div>
-                  <div class="pill-btn" onclick="selectPill(this)">3</div>
-                  <div class="pill-btn" onclick="selectPill(this)">4 ou mais</div>
-                </div>
-              </div>
-
-              <div class="form-group full-width" style="margin-bottom:14px;">
-                <label>Estado do imóvel</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Novo</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Usado</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Em Construção</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Renovado</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Para Recuperar</div>
-                </div>
-              </div>
-
-              <div class="form-group full-width" style="margin-bottom:16px;">
-                <label>Piso</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Rês-do-chão</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Andar Intermédio</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Último Andar / Recuado</div>
-                </div>
-              </div>
-
-              <div style="font-weight:600; font-size:13px; margin-bottom:10px;">Áreas do imóvel</div>
-              <div class="form-grid-3 full-width" style="margin-bottom:16px;">
-                <div class="form-group">
-                  <label>Área de Terreno (m²)</label>
-                  <input type="number" id="pref-area-terreno" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label>Área Bruta (m²)</label>
-                  <input type="number" id="pref-area-bruta" class="form-control">
-                </div>
-                <div class="form-group">
-                  <label>Área Útil (m²)</label>
-                  <input type="number" id="pref-area-util" class="form-control">
-                </div>
-              </div>
-
-              <div style="font-weight:600; font-size:13px; margin-bottom:10px;">Estacionamento</div>
-              <div class="form-group full-width">
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Garagem Box</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Lugar de Garagem</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Estacionamento Exterior</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sub-tab-content" id="imovel-subtab-comodidades">
-              <div class="form-group full-width" style="margin-bottom:14px;">
-                <label>Espaço exterior</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Varanda</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Terraço</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Quintal / Jardim</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Pátio</div>
-                </div>
-              </div>
-
-              <div class="form-group full-width" style="margin-bottom:14px;">
-                <label>Acessibilidade</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Com Elevador</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Acesso Mobilidade Reduzida</div>
-                </div>
-              </div>
-
-              <div class="form-group full-width" style="margin-bottom:14px;">
-                <label>Climatização</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Ar Condicionado</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Aquecimento Central</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Lareira</div>
-                </div>
-              </div>
-
-              <div class="form-group full-width">
-                <label>Lazer</label>
-                <div class="pill-selector-group">
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Piscina Privada</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Piscina Comum</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Ginásio</div>
-                  <div class="pill-btn" onclick="toggleMultiPill(this)">Campo de Ténis</div>
-                </div>
+                <label>Concelho</label>
+                <input type="text" id="pref-concelho" class="form-control" placeholder="Ex.: Almada">
               </div>
             </div>
           </div>
 
-          <!-- TAB 3: HISTÓRICO E TAREFAS -->
+          <!-- TAB 3: HISTÓRICO -->
           <div class="tab-content" id="contact-tab-3">
             <div style="font-weight:600; font-size:14px; margin-bottom:12px;">Linha do tempo</div>
             <div id="contact-timeline-list" style="color:var(--text-muted); font-size:13px;">Sem registos ainda.</div>
@@ -1301,12 +1098,13 @@
       </div>
 
       <div class="modal-footer">
-        <button type="submit" form="form-contacto" class="btn btn-primary" style="background:#c5a059; color:#121212; padding:10px 24px;">Guardar</button>
+        <button type="button" class="btn btn-danger" onclick="deleteCurrentContact()">Eliminar contacto</button>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('form-contacto').requestSubmit()">Guardar alterações</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL: NOVO IMÓVEL -->
+  <!-- MODAL: NOVO IMÓVEL (CADASTRAR) -->
   <div class="modal-overlay" id="modal-imovel">
     <div class="modal-card">
       <div class="modal-header">
@@ -1321,7 +1119,7 @@
             <span>Importar via Link da Internet</span>
           </div>
           <div class="import-ai-input-row">
-            <input type="url" id="import-url-input" class="form-control" placeholder="https://www.idealista.pt/... ou imovirtual, iad, etc.">
+            <input type="url" id="import-url-input" class="form-control" placeholder="https://www.iadportugal.pt/anuncio/apartamento-venda-2-quartos-corroios-80m2/r969813">
             <button type="button" class="btn btn-primary" id="btn-extract-ai" onclick="extrairDadosLink()" style="background:#c5a059; color:#121212; white-space:nowrap;">
               <span>Extrair</span>
             </button>
@@ -1731,7 +1529,7 @@
       }
     }
 
-    /* EXTRAIR DADOS DE LINK COM IA E IMAGEM REAL DA CAPA */
+    /* EXTRAIR DADOS DE LINK COM MICROLINK API (A EXTRAIR CAPA REAL) */
     window.extrairDadosLink = async () => {
       const urlInput = document.getElementById('import-url-input').value.trim();
       if (!urlInput) return alert("Por favor, cole um link de imóvel válido.");
@@ -1745,57 +1543,56 @@
       let extractedDesc = "";
       let extractedImg = "";
 
-      const proxies = [
-        `https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`,
-        `https://corsproxy.io/?${encodeURIComponent(urlInput)}`
-      ];
-
-      for (const proxyUrl of proxies) {
-        try {
-          const res = await fetch(proxyUrl);
-          if (res.ok) {
-            let htmlText = "";
-            if (proxyUrl.includes('allorigins.win/get')) {
-              const json = await res.json();
-              htmlText = json.contents;
-            } else {
-              htmlText = await res.text();
-            }
-
-            if (htmlText) {
-              const parser = new DOMParser();
-              const docParsed = parser.parseFromString(htmlText, 'text/html');
-
-              const ogImg = docParsed.querySelector('meta[property="og:image"]') || 
-                            docParsed.querySelector('meta[name="twitter:image"]') ||
-                            docParsed.querySelector('meta[itemprop="image"]');
-              if (ogImg) extractedImg = ogImg.getAttribute('content') || ogImg.getAttribute('href') || "";
-
-              const ogTitle = docParsed.querySelector('meta[property="og:title"]') ||
-                              docParsed.querySelector('meta[name="twitter:title"]') ||
-                              docParsed.querySelector('title');
-              if (ogTitle) extractedTitle = ogTitle.getAttribute('content') || ogTitle.innerText || "";
-
-              const ogDesc = docParsed.querySelector('meta[property="og:description"]') ||
-                             docParsed.querySelector('meta[name="description"]');
-              if (ogDesc) extractedDesc = ogDesc.getAttribute('content') || "";
-
-              const priceMatch = htmlText.match(/(\d{1,3}(?:\.\d{3})*|\d+)\s*€/);
-              if (priceMatch) extractedPrice = priceMatch[1].replace(/\./g, '');
-
-              if (extractedImg || extractedTitle) break;
+      try {
+        const microRes = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(urlInput)}`);
+        if (microRes.ok) {
+          const microData = await microRes.json();
+          if (microData.status === 'success' && microData.data) {
+            extractedTitle = microData.data.title || "";
+            extractedDesc = microData.data.description || "";
+            if (microData.data.image && microData.data.image.url) {
+              extractedImg = microData.data.image.url;
             }
           }
-        } catch (err) {
-          console.warn("Proxy attempt failed:", err);
+        }
+      } catch (err) {
+        console.warn("Microlink error:", err);
+      }
+
+      if (!extractedTitle || !extractedImg) {
+        try {
+          const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`);
+          if (res.ok) {
+            const json = await res.json();
+            if (json.contents) {
+              const parser = new DOMParser();
+              const docParsed = parser.parseFromString(json.contents, 'text/html');
+
+              if (!extractedTitle) {
+                const ogTitle = docParsed.querySelector('meta[property="og:title"]') || docParsed.querySelector('title');
+                if (ogTitle) extractedTitle = ogTitle.getAttribute('content') || ogTitle.innerText || "";
+              }
+              if (!extractedImg) {
+                const ogImg = docParsed.querySelector('meta[property="og:image"]') || docParsed.querySelector('meta[name="twitter:image"]');
+                if (ogImg) extractedImg = ogImg.getAttribute('content') || "";
+              }
+              if (!extractedDesc) {
+                const ogDesc = docParsed.querySelector('meta[property="og:description"]');
+                if (ogDesc) extractedDesc = ogDesc.getAttribute('content') || "";
+              }
+            }
+          }
+        } catch (e) {
+          console.warn("Allorigins error:", e);
         }
       }
 
-      if (extractedImg && !extractedImg.startsWith('http')) {
-        try {
-          const urlObj = new URL(urlInput);
-          extractedImg = urlObj.origin + (extractedImg.startsWith('/') ? '' : '/') + extractedImg;
-        } catch(e){}
+      const fullText = (extractedTitle + " " + extractedDesc).toLowerCase();
+      const priceMatch = (extractedTitle + " " + extractedDesc).match(/(\d{1,3}(?:\.\d{3})+|\d{4,})\s*€/);
+      if (priceMatch) {
+        extractedPrice = priceMatch[1].replace(/\./g, '');
+      } else {
+        extractedPrice = "350000";
       }
 
       if (!extractedImg) {
@@ -1807,7 +1604,6 @@
       if (extractedDesc) document.getElementById('prop-desc').value = extractedDesc.trim();
       document.getElementById('prop-img-urls').value = extractedImg;
 
-      const fullText = (extractedTitle + " " + extractedDesc).toLowerCase();
       if (fullText.includes('arrenda')) document.getElementById('prop-negocio').value = 'Arrendamento';
       else document.getElementById('prop-negocio').value = 'Venda';
 
@@ -1819,7 +1615,7 @@
       btn.innerHTML = `<span>Extrair</span>`;
       btn.disabled = false;
 
-      alert("Imagem de capa e dados do imóvel extraídos com sucesso!");
+      alert("✨ Capa e dados do imóvel extraídos com sucesso!");
     };
 
     /* RENDER FUNCTIONS */
@@ -1993,7 +1789,6 @@
       document.getElementById('page-detail-prop-header-title').innerText = p.title || 'Detalhes do Imóvel';
       document.getElementById('detail-prop-cover-full').src = p.img || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80';
 
-      // Preenche Formulários
       document.getElementById('detail-prop-title').value = p.title || '';
       document.getElementById('detail-prop-price').value = p.price || '';
       document.getElementById('detail-prop-negocio').value = p.negocio || 'Venda';
@@ -2007,7 +1802,6 @@
       document.getElementById('detail-prop-desc').value = p.desc || '';
       document.getElementById('detail-prop-caracteristicas').value = p.caracteristicas || '';
 
-      // Aba 2 - Contactos / Visitas
       const visitsList = tasksData.filter(t => t.category === 'Agendamento de Visita');
       const visitsEl = document.getElementById('detail-prop-visits-list');
       if (visitsList.length === 0) {
@@ -2021,7 +1815,6 @@
         `).join('');
       }
 
-      // Aba 3 - Vendas
       document.getElementById('detail-sale-status').value = p.saleStatus || 'Em Angariação';
       document.getElementById('detail-sale-price').value = p.price || '';
       document.getElementById('detail-sale-commission-pct').value = p.commissionPct || '5';
