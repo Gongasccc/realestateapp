@@ -2,13 +2,13 @@
 <html lang="pt-PT">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Imovio - Gestão Imobiliária</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Imovio - CRM Imobiliário</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      /* TEMA ESCURO ESTILO SPOTIFY + DOURADO SUBTIL */
+      /* PALETA DE CORES: SPOTIFY DARK + DOURADO SUBTIL */
       --bg-color: #121212;
       --card-bg: #181818;
       --sidebar-bg: #000000;
@@ -17,17 +17,19 @@
       --sidebar-text-active: #ffffff;
       --text-main: #ffffff;
       --text-muted: #a7a7a7;
-      --accent: #c5a059; /* Dourado subtil */
-      --accent-light: rgba(197, 160, 89, 0.12);
+      --accent: #c5a059;
+      --accent-light: rgba(197, 160, 89, 0.15);
       --border-color: #282828;
       --input-bg: #242424;
       --green-status: #1db954;
-      --red-status: #f15e5e;
+      --red-status: #ef4444;
       --sidebar-width: 240px;
+      --bottom-nav-height: 62px;
+      --btn-radius: 10px;
+      --card-radius: 16px;
     }
 
     body.light-mode {
-      /* TEMA CLARO: FUNDO BRANCO + SECUNDÁRIO PRETO */
       --bg-color: #ffffff;
       --card-bg: #f8f9fa;
       --sidebar-bg: #121212;
@@ -46,8 +48,15 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Poppins', -apple-system, sans-serif;
       -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    input, textarea, select {
+      -webkit-user-select: text !important;
+      user-select: text !important;
     }
 
     body {
@@ -59,7 +68,6 @@
       transition: background-color 0.25s, color 0.25s;
     }
 
-    /* SVG ICONS */
     .icon {
       width: 18px;
       height: 18px;
@@ -72,403 +80,255 @@
       vertical-align: middle;
       flex-shrink: 0;
     }
-
     .icon-sm { width: 14px; height: 14px; }
     .icon-lg { width: 24px; height: 24px; }
 
     /* AUTH OVERLAY */
     #auth-overlay {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: #000000;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      z-index: 99999;
+      display: flex; align-items: center; justify-content: center;
       padding: 20px;
     }
 
     .auth-card {
       background: #181818;
       border: 1px solid #282828;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 400px;
-      padding: 32px;
+      border-radius: 20px;
+      width: 100%; max-width: 400px;
+      padding: 32px 24px;
       color: #ffffff;
-      box-shadow: 0 20px 30px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
       text-align: center;
     }
 
     .auth-brand {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin-bottom: 24px;
     }
 
     .auth-brand-icon {
-      width: 42px;
-      height: 42px;
-      background: #c5a059;
-      color: #121212;
+      width: 42px; height: 42px;
+      background: #c5a059; color: #121212;
       border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 20px;
-      letter-spacing: -0.5px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 20px;
     }
 
-    .auth-tabs {
-      display: flex;
-      border-bottom: 1px solid #282828;
-      margin-bottom: 24px;
-      justify-content: center;
-    }
-
+    .auth-tabs { display: flex; border-bottom: 1px solid #282828; margin-bottom: 24px; }
     .auth-tab {
-      flex: 1;
-      padding: 10px;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 600;
-      color: #b3b3b3;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
+      flex: 1; padding: 10px; text-align: center; font-size: 13px; font-weight: 600;
+      color: #b3b3b3; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;
     }
-
-    .auth-tab.active {
-      color: #c5a059;
-      border-bottom-color: #c5a059;
-    }
-
-    .auth-link {
-      color: #c5a059;
-      font-size: 12px;
-      cursor: pointer;
-      text-decoration: underline;
-      display: inline-block;
-      margin-top: 14px;
-    }
+    .auth-tab.active { color: #c5a059; border-bottom-color: #c5a059; }
+    .auth-link { color: #c5a059; font-size: 12px; cursor: pointer; text-decoration: underline; display: inline-block; margin-top: 14px; }
 
     /* SIDEBAR */
+    #sidebar-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px); z-index: 19999; opacity: 0;
+      pointer-events: none; transition: opacity 0.3s;
+    }
+    #sidebar-overlay.open { opacity: 1; pointer-events: auto; }
+
     #sidebar {
+      position: fixed; top: 0; left: 0; bottom: 0;
       width: var(--sidebar-width);
       background-color: var(--sidebar-bg);
       border-right: 1px solid var(--border-color);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      z-index: 100;
+      display: flex; flex-direction: column;
+      z-index: 20000;
+      transform: translateX(-100%);
       transition: transform 0.3s ease;
     }
+    #sidebar.open { transform: translateX(0); }
 
     .sidebar-brand {
-      padding: 24px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #ffffff;
-      font-weight: 700;
-      font-size: 18px;
+      padding: 24px 20px; display: flex; align-items: center;
+      gap: 12px; color: #ffffff; font-weight: 700; font-size: 18px;
     }
 
     .sidebar-brand-icon {
-      width: 34px;
-      height: 34px;
-      background: #c5a059;
-      color: #121212;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 16px;
+      width: 34px; height: 34px; background: #c5a059; color: #121212;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 16px;
     }
 
     .sidebar-section-title {
-      padding: 0 20px 8px 20px;
-      font-size: 11px;
-      text-transform: uppercase;
-      color: var(--sidebar-text);
-      opacity: 0.6;
-      font-weight: 600;
-      letter-spacing: 0.5px;
+      padding: 0 20px 8px 20px; font-size: 11px; text-transform: uppercase;
+      color: var(--sidebar-text); opacity: 0.6; font-weight: 600; letter-spacing: 0.5px;
     }
 
-    .sidebar-menu {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      padding: 0 12px;
-    }
+    .sidebar-menu { flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 0 12px; }
 
     .sidebar-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      color: var(--sidebar-text);
-      font-size: 14px;
-      font-weight: 500;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; color: var(--sidebar-text);
+      font-size: 14px; font-weight: 500; border-radius: 8px; cursor: pointer; transition: all 0.2s;
     }
+    .sidebar-item:hover { color: #ffffff; background: rgba(255, 255, 255, 0.05); }
+    .sidebar-item.active { background: var(--sidebar-active); color: var(--sidebar-text-active); border-left: 3px solid #c5a059; }
 
-    .sidebar-item:hover {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.05);
-    }
+    .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
 
-    .sidebar-item.active {
-      background: var(--sidebar-active);
-      color: var(--sidebar-text-active);
-      border-left: 3px solid #c5a059;
-    }
-
-    .sidebar-footer {
-      padding: 16px 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    /* MAIN CONTENT */
-    #app-container {
-      display: none;
-      width: 100%;
-      min-height: 100vh;
-    }
-
-    #main-wrapper {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
+    /* MAIN APP STRUCTURE */
+    #app-container { display: none; width: 100%; min-height: 100vh; flex-direction: column; }
+    #main-wrapper { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100vh; overflow-y: auto; }
 
     .top-bar {
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border-color);
-      padding: 16px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      position: sticky;
-      top: 0;
-      z-index: 90;
+      background: var(--card-bg); border-bottom: 1px solid var(--border-color);
+      padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+      gap: 20px; position: sticky; top: 0; z-index: 90;
     }
 
-    .top-bar-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .mobile-menu-toggle {
-      display: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--text-main);
-    }
-
-    .top-bar-title {
-      font-size: 16px;
-      font-weight: 600;
-    }
+    .top-bar-left { display: flex; align-items: center; gap: 12px; }
+    .mobile-menu-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--text-main); }
+    .top-bar-title { font-size: 16px; font-weight: 600; }
 
     .top-search-box {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg-color);
-      border: 1px solid var(--border-color);
-      padding: 8px 16px;
-      border-radius: 8px;
-      width: 280px;
+      display: flex; align-items: center; gap: 8px;
+      background: var(--bg-color); border: 1px solid var(--border-color);
+      padding: 8px 16px; border-radius: 8px; width: 280px;
     }
 
     .top-search-box input {
-      border: none;
-      background: transparent;
-      outline: none;
-      width: 100%;
-      font-size: 13px;
-      color: var(--text-main);
+      border: none; background: transparent; outline: none;
+      width: 100%; font-size: 13px; color: var(--text-main);
     }
 
     .page-container {
-      padding: 32px;
-      max-width: 1400px;
-      width: 100%;
-      margin: 0 auto;
+      padding: 24px; max-width: 1400px; width: 100%; margin: 0 auto;
+      padding-bottom: calc(var(--bottom-nav-height) + 30px);
     }
 
     .page { display: none; }
-    .page.active { display: block; }
+    .page.active { display: block; animation: fadeIn 0.25s ease forwards; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
     .page-header {
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      margin-bottom: 24px; display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 12px;
     }
 
     .page-title { font-size: 24px; font-weight: 600; }
     .page-subtitle { font-size: 13px; color: var(--text-muted); }
 
-    /* METRICS GRID */
+    /* METRICS DASHBOARD GRID */
     .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      margin-bottom: 32px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px; margin-bottom: 24px;
     }
 
     .metric-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      border-radius: var(--card-radius); padding: 20px;
+      display: flex; align-items: center; justify-content: space-between;
     }
 
-    .metric-label { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+    .metric-label { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
     .metric-value { font-size: 26px; font-weight: 700; }
 
     .metric-icon-box {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: var(--accent-light);
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--accent-light); color: var(--accent);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
 
     .content-card {
-      background: var(--card-bg);
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      border-radius: var(--card-radius); padding: 24px; margin-bottom: 24px;
+    }
+
+    /* FILTERS BAR */
+    .filter-bar {
+      display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
+      background: var(--card-bg); padding: 16px; border-radius: var(--card-radius);
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
+    }
+
+    .filter-item { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
+    .filter-item label { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+
+    .filter-input, .filter-select {
+      padding: 9px 12px; border: 1px solid var(--border-color);
+      border-radius: 8px; font-size: 13px; outline: none;
+      background: var(--input-bg); color: var(--text-main);
     }
 
     /* BUTTONS */
     .btn {
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid transparent;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s;
+      padding: 10px 18px; border-radius: var(--btn-radius);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      border: 1px solid transparent; display: inline-flex;
+      align-items: center; justify-content: center; gap: 8px; transition: all 0.2s;
     }
 
-    .btn-primary {
-      background: var(--accent);
-      color: #121212;
-    }
-
-    body.light-mode .btn-primary {
-      background: #121212;
-      color: #ffffff;
-    }
-
+    .btn-primary { background: var(--accent); color: #121212; }
+    body.light-mode .btn-primary { background: #121212; color: #ffffff; }
     .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary { background: var(--card-bg); border-color: var(--border-color); color: var(--text-main); }
+    .btn-danger { background: var(--red-status); color: #ffffff; }
 
-    .btn-secondary {
-      background: var(--card-bg);
-      border-color: var(--border-color);
-      color: var(--text-main);
+    .btn-ai {
+      background: rgba(197, 160, 89, 0.15); border: 1px solid var(--accent);
+      color: var(--accent); font-size: 12px; padding: 8px 14px;
     }
 
-    .btn-danger {
-      background: var(--red-status);
-      color: #ffffff;
+    /* PILL BUTTONS */
+    .pill-selector-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
+
+    .pill-btn {
+      padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color);
+      background: var(--input-bg); color: var(--text-main); font-size: 12px;
+      cursor: pointer; transition: all 0.2s;
+    }
+
+    .pill-btn.active {
+      background: var(--accent); border-color: var(--accent);
+      color: #121212; font-weight: 600;
+    }
+
+    .tag-pill {
+      background: var(--input-bg); border: 1px solid var(--border-color);
+      border-radius: 14px; padding: 3px 10px; font-size: 11px;
+      display: inline-flex; align-items: center; gap: 6px; color: var(--text-main);
     }
 
     /* PROPERTY GRID */
     .property-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 20px;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;
     }
 
     .property-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      border-radius: var(--card-radius); overflow: hidden; display: flex; flex-direction: column;
     }
 
     .property-card-img-wrapper {
-      position: relative;
-      height: 180px;
-      width: 100%;
-      background: #282828;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: relative; height: 180px; width: 100%; background: #282828;
     }
 
-    .property-card-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .property-card-img { width: 100%; height: 100%; object-fit: cover; }
+
+    .property-card-chk { position: absolute; top: 12px; left: 12px; width: 18px; height: 18px; cursor: pointer; }
 
     .property-card-delete {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(0, 0, 0, 0.7);
-      border: none;
-      border-radius: 6px;
-      padding: 6px;
-      cursor: pointer;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(0, 0, 0, 0.7); border: none; border-radius: 6px;
+      padding: 6px; cursor: pointer; color: #ffffff;
     }
 
-    .property-card-body {
-      padding: 16px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
+    .property-card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
     .property-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
     .property-tags { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
     .property-price { font-size: 18px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
 
     .property-card-footer {
-      border-top: 1px solid var(--border-color);
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(0, 0, 0, 0.15);
+      border-top: 1px solid var(--border-color); padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0, 0, 0, 0.15); font-size: 12px;
     }
 
     /* DATA TABLE */
@@ -478,79 +338,66 @@
     .data-table td { padding: 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
 
     .badge {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
+      padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 4px;
     }
 
     .badge-buyer { background: var(--accent-light); color: var(--accent); }
     .badge-seller { background: var(--border-color); color: var(--text-main); }
+    .badge-completed { background: rgba(29, 185, 84, 0.2); color: var(--green-status); }
+    .badge-pending { background: rgba(239, 68, 68, 0.2); color: var(--red-status); }
 
-    .action-icons { display: flex; gap: 8px; align-items: center; }
+    .action-icons { display: flex; gap: 6px; align-items: center; }
 
     .btn-icon {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--text-muted);
-      padding: 6px;
-      border-radius: 6px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      background: none; border: none; cursor: pointer; color: var(--text-muted);
+      padding: 6px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center;
       transition: background 0.2s, color 0.2s;
     }
 
     .btn-icon:hover { color: var(--text-main); background: var(--input-bg); }
 
-    /* MODAL SYSTEM */
+    /* MODAL SYSTEM & TABS */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(4px); z-index: 1000;
+      display: none; align-items: center; justify-content: center; padding: 20px;
     }
-
     .modal-overlay.active { display: flex; }
 
     .modal-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 700px;
-      max-height: 90vh;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
+      background: var(--card-bg); border: 1px solid var(--border-color);
+      border-radius: 20px; width: 100%; max-width: 800px;
+      max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column;
     }
 
     .modal-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 20px 24px; border-bottom: 1px solid var(--border-color);
+      display: flex; align-items: center; justify-content: space-between;
     }
 
     .modal-body { padding: 24px; flex: 1; }
 
     .modal-footer {
-      padding: 16px 24px;
-      border-top: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
+      padding: 16px 24px; border-top: 1px solid var(--border-color);
+      display: flex; justify-content: space-between; gap: 12px;
     }
+
+    .modal-tabs {
+      display: flex; border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px; gap: 10px; overflow-x: auto;
+    }
+
+    .modal-tab {
+      padding: 10px 16px; font-size: 13px; font-weight: 500;
+      color: var(--text-muted); cursor: pointer;
+      border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap;
+    }
+
+    .modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
     .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
@@ -558,87 +405,64 @@
     .form-group label { font-size: 12px; font-weight: 600; color: var(--text-main); }
 
     .form-control {
-      padding: 10px 14px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 13px;
-      outline: none;
-      width: 100%;
-      background: var(--input-bg);
-      color: var(--text-main);
+      padding: 10px 14px; border: 1px solid var(--border-color);
+      border-radius: 8px; font-size: 13px; outline: none; width: 100%;
+      background: var(--input-bg); color: var(--text-main);
     }
 
     /* SWITCH TOGGLE */
     .switch-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 0;
-      border-bottom: 1px solid var(--border-color);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0; border-bottom: 1px solid var(--border-color);
     }
-
     .switch-label { font-size: 14px; font-weight: 500; }
-
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 48px;
-      height: 24px;
-    }
-
+    .switch { position: relative; display: inline-block; width: 48px; height: 24px; }
     .switch input { opacity: 0; width: 0; height: 0; }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background-color: var(--border-color);
-      transition: .3s;
-      border-radius: 24px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .3s;
-      border-radius: 50%;
-    }
-
+    .slider { position: absolute; cursor: pointer; inset: 0; background-color: var(--border-color); transition: .3s; border-radius: 24px; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
     input:checked + .slider { background-color: var(--accent); }
     input:checked + .slider:before { transform: translateX(24px); }
 
     /* EMPTY STATE */
     .empty-state {
-      padding: 40px 20px;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: var(--text-muted);
+      padding: 40px 20px; text-align: center; display: flex;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; color: var(--text-muted);
     }
-
     .empty-state .icon { width: 40px; height: 40px; stroke-width: 1.5; opacity: 0.6; }
 
-    @media (max-width: 768px) {
-      #sidebar {
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        transform: translateX(-100%);
-      }
-      #sidebar.open { transform: translateX(0); }
+    /* BOTTOM NAV BAR (MOBILE) */
+    #bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: var(--bottom-nav-height);
+      background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px); display: flex;
+      justify-content: space-around; align-items: center; z-index: 9000;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .nav-btn {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 60px; height: 100%; color: var(--text-muted); cursor: pointer; transition: color 0.2s;
+    }
+    .nav-btn .nav-lbl { font-size: 10px; margin-top: 4px; font-weight: 500; }
+    .nav-btn.active { color: var(--accent); }
+
+    @media (min-width: 800px) {
+      #sidebar { position: static; transform: translateX(0); box-shadow: none; z-index: 10; }
+      #sidebar-overlay { display: none !important; }
+      #bottom-nav { display: none; }
+      .mobile-menu-toggle { display: none !important; }
+      #app-container { flex-direction: row; }
+      .page-container { padding-bottom: 40px; }
+    }
+
+    @media (max-width: 799px) {
       .mobile-menu-toggle { display: block; }
-      .page-container { padding: 16px; }
       .top-search-box { display: none; }
       .form-grid { grid-template-columns: 1fr; }
+      .modal-card { max-height: 92vh; border-radius: 20px 20px 0 0; }
+      .modal-overlay { align-items: flex-end; padding: 0; }
     }
   </style>
 </head>
@@ -649,7 +473,7 @@
     <div class="auth-card">
       <div class="auth-brand">
         <div class="auth-brand-icon">I</div>
-        <span style="font-size: 22px; font-weight: 700; letter-spacing: -0.5px;">Imovio</span>
+        <span style="font-size: 22px; font-weight: 700;">Imovio</span>
       </div>
 
       <div class="auth-tabs" id="auth-tabs-container">
@@ -661,7 +485,7 @@
       <form id="auth-form" onsubmit="handleAuthSubmit(event)">
         <div class="form-group" style="margin-bottom: 16px; text-align: left;">
           <label>Email</label>
-          <input type="email" id="auth-email" class="form-control" placeholder="seu.email@imovio.pt" required>
+          <input type="email" id="auth-email" class="form-control" placeholder="goncalo.cordeiro.2003@gmail.com" required>
         </div>
         <div class="form-group" id="auth-password-group" style="margin-bottom: 24px; text-align: left;">
           <label>Palavra-passe</label>
@@ -685,6 +509,8 @@
 
   <!-- MAIN APP WRAPPER -->
   <div id="app-container">
+    <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+    
     <!-- SIDEBAR NAVIGATION -->
     <aside id="sidebar">
       <div class="sidebar-brand">
@@ -700,7 +526,7 @@
           <span>Dashboard</span>
         </div>
         <div class="sidebar-item" onclick="switchPage('page-contactos', this)">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
           <span>Contactos</span>
         </div>
         <div class="sidebar-item" onclick="switchPage('page-imoveis', this)">
@@ -741,13 +567,16 @@
       </header>
 
       <main class="page-container">
-        <!-- DASHBOARD PAGE -->
+        <!-- DASHBOARD PAGE (Imagem 1) -->
         <section id="page-dashboard" class="page active">
           <div class="page-header">
             <div>
               <h1 class="page-title">Dashboard</h1>
-              <p class="page-subtitle">Visão geral do seu desempenho imobiliário em tempo real.</p>
+              <p class="page-subtitle">Visão geral do seu desempenho.</p>
             </div>
+            <select class="filter-select" style="width:180px;">
+              <option>Todos os consultores</option>
+            </select>
           </div>
 
           <div class="metrics-grid">
@@ -757,7 +586,7 @@
                 <div class="metric-value" id="kpi-contacts">0</div>
               </div>
               <div class="metric-icon-box">
-                <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
               </div>
             </div>
 
@@ -777,7 +606,7 @@
                 <div class="metric-value" id="kpi-tasks">0</div>
               </div>
               <div class="metric-icon-box">
-                <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                <svg class="icon icon-lg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
               </div>
             </div>
 
@@ -795,28 +624,72 @@
           <div class="content-card">
             <div style="font-weight: 600; margin-bottom: 16px; display:flex; align-items:center; gap:8px;">
               <svg class="icon" style="color:var(--accent)" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-              <span>Negócios Ativos em Pipeline</span>
+              <span>Negócios em aberto</span>
             </div>
             <div id="dashboard-deals-list">
               <div class="empty-state">
-                <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
-                <span>Carregando negócios...</span>
+                <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"></line></svg>
+                <span>Nenhum negócio ativo registado.</span>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- CONTACTS PAGE -->
+        <!-- CONTACTS PAGE (Imagens 2, 3, 4) -->
         <section id="page-contactos" class="page">
           <div class="page-header">
             <div>
               <h1 class="page-title">Contactos</h1>
-              <p class="page-subtitle">Base de dados unificada de clientes e leads.</p>
+              <p class="page-subtitle">Base de clientes e leads.</p>
             </div>
-            <button class="btn btn-primary" onclick="openContactModal()">
-              <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              <span>Novo contacto</span>
-            </button>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-secondary" onclick="exportContactsCSV()">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>Exportar CSV</span>
+              </button>
+              <button class="btn btn-primary" onclick="openContactModal()">
+                <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Novo contacto</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-item">
+              <label>Pesquisar</label>
+              <input type="text" id="filter-contact-text" class="filter-input" placeholder="Nome, telefone ou e-mail..." oninput="filterContactsTable()">
+            </div>
+            <div class="filter-item">
+              <label>Tipo de cliente</label>
+              <select id="filter-contact-type" class="filter-select" onchange="filterContactsTable()">
+                <option value="Todos">Todos</option>
+                <option value="Comprador">Comprador</option>
+                <option value="Vendedor">Vendedor</option>
+                <option value="Arrendatário">Arrendatário</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label>Origem</label>
+              <select id="filter-contact-origin" class="filter-select" onchange="filterContactsTable()">
+                <option value="Todas">Todas</option>
+                <option value="amigo">amigo</option>
+                <option value="Particular">Particular</option>
+                <option value="idealista">idealista</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label>Consultor</label>
+              <select class="filter-select"><option>Todos</option></select>
+            </div>
+            <div class="filter-item">
+              <label>Criado de</label>
+              <input type="date" class="filter-input">
+            </div>
+            <div class="filter-item">
+              <label>Até</label>
+              <input type="date" class="filter-input">
+            </div>
           </div>
 
           <div class="content-card" style="padding: 0;">
@@ -840,17 +713,33 @@
           </div>
         </section>
 
-        <!-- PROPERTIES PAGE -->
+        <!-- PROPERTIES PAGE (Imagem 11) -->
         <section id="page-imoveis" class="page">
           <div class="page-header">
             <div>
               <h1 class="page-title">Dashboard de Imóveis</h1>
-              <p class="page-subtitle">Carteira de imóveis e imóveis associados a vendedores.</p>
+              <p class="page-subtitle">Cadastro de imóveis, extração via link e disparo automático de campanha.</p>
             </div>
             <button class="btn btn-primary" onclick="openPropertyModal()">
               <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
               <span>Cadastrar Novo Imóvel</span>
             </button>
+          </div>
+
+          <div class="filter-bar">
+            <div style="width: 100%; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px;">Filtros de localização / Comparador de mercado</div>
+            <div class="filter-item">
+              <label>Distrito</label>
+              <select class="filter-select"><option>Todos</option><option>Setúbal</option><option>Lisboa</option></select>
+            </div>
+            <div class="filter-item">
+              <label>Concelho</label>
+              <select class="filter-select" style="background:var(--accent); color:#121212; font-weight:600;"><option>Todos</option><option>Almada</option></select>
+            </div>
+            <div class="filter-item">
+              <label>Freguesia</label>
+              <select class="filter-select"><option>Todas</option></select>
+            </div>
           </div>
 
           <div class="property-grid" id="property-grid-container">
@@ -863,7 +752,7 @@
           <div class="page-header">
             <div>
               <h1 class="page-title">Pipeline de Negócios</h1>
-              <p class="page-subtitle">Acompanhamento de propostas, visitas e CPCV.</p>
+              <p class="page-subtitle">Acompanhamento de propostas e negócios ativos.</p>
             </div>
             <button class="btn btn-primary" onclick="openDealModal()">
               <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -892,17 +781,41 @@
           </div>
         </section>
 
-        <!-- TASKS PAGE -->
+        <!-- TASKS PAGE (Imagem 10) -->
         <section id="page-tarefas" class="page">
           <div class="page-header">
             <div>
               <h1 class="page-title">Tarefas</h1>
-              <p class="page-subtitle">Ações pendentes, follow-ups e visitas agendadas.</p>
+              <p class="page-subtitle">Follow-ups e tarefas com prazo.</p>
             </div>
             <button class="btn btn-primary" onclick="openTaskModal()">
               <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
               <span>Nova tarefa</span>
             </button>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-item">
+              <label>Status</label>
+              <select id="filter-task-status" class="filter-select" onchange="filterTasksList()">
+                <option value="Todos">Todos</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Concluída">Concluída</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label>Tipo / Categoria</label>
+              <select id="filter-task-cat" class="filter-select" onchange="filterTasksList()">
+                <option value="Todos">Todos</option>
+                <option value="Assinatura de CPCV">Assinatura de CPCV</option>
+                <option value="Agendamento de Visita">Agendamento de Visita</option>
+                <option value="Contacto Geral">Contacto Geral</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label>Consultor</label>
+              <select class="filter-select"><option>Todos</option></select>
+            </div>
           </div>
 
           <div class="content-card">
@@ -917,13 +830,13 @@
           <div class="page-header">
             <div>
               <h1 class="page-title">Configurações</h1>
-              <p class="page-subtitle">Definições da conta e preferências de visualização.</p>
+              <p class="page-subtitle">Definições de conta e preferências.</p>
             </div>
           </div>
 
           <div class="content-card">
             <h3 style="font-size: 15px; margin-bottom: 16px; display:flex; align-items:center; gap:8px;">
-              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle></svg>
               <span>Aparência</span>
             </h3>
             <div class="switch-row">
@@ -940,9 +853,6 @@
               <svg class="icon" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
               <span>Sessão</span>
             </h3>
-            <p style="font-size:13px; color: var(--text-muted); margin-bottom: 16px;">
-              A tua sessão mantém-se ativa automaticamente no dispositivo até que cliques em terminar sessão.
-            </p>
             <button class="btn btn-danger" onclick="handleLogout()">
               <svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
               <span>Terminar Sessão</span>
@@ -953,56 +863,291 @@
     </div>
   </div>
 
-  <!-- MODALS -->
+  <!-- BOTTOM NAV BAR (MOBILE) -->
+  <div id="bottom-nav">
+    <div class="nav-btn active" onclick="switchPage('page-dashboard')">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+      <span class="nav-lbl">Início</span>
+    </div>
+    <div class="nav-btn" onclick="switchPage('page-contactos')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+      <span class="nav-lbl">Contactos</span>
+    </div>
+    <div class="nav-btn" onclick="switchPage('page-imoveis')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      <span class="nav-lbl">Imóveis</span>
+    </div>
+    <div class="nav-btn" onclick="switchPage('page-tarefas')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+      <span class="nav-lbl">Tarefas</span>
+    </div>
+  </div>
 
-  <!-- MODAL: CONTACT -->
+  <!-- MODAL: CONTACT DETALHADO (3 ABAS REAIS - Imagens 5, 6, 7, 8, 9) -->
   <div class="modal-overlay" id="modal-contacto">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 id="modal-contact-title">Novo Contacto</h3>
+        <h3 id="modal-contact-title">Editar contacto</h3>
         <button class="btn-icon" onclick="closeModal('modal-contacto')"><svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
+
       <div class="modal-body">
+        <div class="modal-tabs">
+          <div class="modal-tab active" id="tab-btn-1" onclick="switchContactTab(1)">1. Dados Gerais</div>
+          <div class="modal-tab" id="tab-btn-2" onclick="switchContactTab(2)">2. Imóvel</div>
+          <div class="modal-tab" id="tab-btn-3" onclick="switchContactTab(3)">3. Histórico e Tarefas</div>
+        </div>
+
         <form id="form-contacto" onsubmit="saveContact(event)">
           <input type="hidden" id="contact-id">
-          <div class="form-grid">
+
+          <!-- TAB 1: DADOS GERAIS (Imagens 5 & 6) -->
+          <div class="tab-content active" id="contact-tab-1">
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label>Nome</label>
+                <input type="text" id="contact-name" class="form-control" placeholder="Manuel José Bento Palma" required>
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="contact-email" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Telefone</label>
+                <input type="text" id="contact-phone" class="form-control" placeholder="351918515243">
+                <span style="font-size:10px; color:var(--text-muted);">Números começados por 9 recebem +351 automaticamente.</span>
+              </div>
+              <div class="form-group">
+                <label>Tipo</label>
+                <select id="contact-type" class="form-control">
+                  <option value="Comprador">Comprador</option>
+                  <option value="Vendedor">Vendedor</option>
+                  <option value="Arrendatário">Arrendatário</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Origem</label>
+                <input type="text" id="contact-origin" class="form-control" placeholder="amigo, idealista">
+              </div>
+              <div class="form-group full-width">
+                <label>Data de nascimento</label>
+                <input type="date" id="contact-birth" class="form-control">
+              </div>
+
+              <!-- Identificação -->
+              <div class="form-group full-width" style="margin-top:8px; font-weight:600; font-size:13px;">Identificação</div>
+              <div class="form-group">
+                <label>NIF</label>
+                <input type="text" id="contact-nif" class="form-control" placeholder="179552015">
+              </div>
+              <div class="form-group">
+                <label>Tipo de Identificação</label>
+                <select id="contact-id-type" class="form-control">
+                  <option value="Cartão de Cidadão">Cartão de Cidadão</option>
+                  <option value="Passaporte">Passaporte</option>
+                  <option value="Título de Residência">Título de Residência</option>
+                </select>
+              </div>
+              <div class="form-group full-width">
+                <label>Nº do Documento</label>
+                <input type="text" id="contact-id-num" class="form-control" placeholder="07410819">
+              </div>
+
+              <!-- Morada -->
+              <div class="form-group full-width" style="margin-top:8px; font-weight:600; font-size:13px;">Morada</div>
+              <div class="form-group full-width">
+                <label>Rua / Morada</label>
+                <input type="text" id="contact-address" class="form-control" placeholder="Avenida Casal do Sapo | Parque Verde - Alvéolo U16">
+              </div>
+
+              <!-- Clientes Associados (Imagem 6) -->
+              <div class="form-group full-width" style="margin-top:12px; border-top:1px solid var(--border-color); padding-top:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <label style="font-size:13px;">Clientes associados</label>
+                    <p style="font-size:11px; color:var(--text-muted);">Co-proprietários, sócios ou cônjuges vinculados a este contacto (até 3).</p>
+                  </div>
+                  <button type="button" class="btn btn-secondary" style="font-size:11px; padding:6px 12px;" onclick="alert('Função de vincular cliente adicionada.')">
+                    + Adicionar Cliente Associado
+                  </button>
+                </div>
+              </div>
+
+              <!-- Telegram (Imagem 6) -->
+              <div class="form-group full-width" style="margin-top:12px; border-top:1px solid var(--border-color); padding-top:12px;">
+                <label style="font-size:13px;">Canais de Notificação (Telegram)</label>
+                <p style="font-size:11px; color:var(--text-muted); margin-bottom:8px;">O cliente só recebe lembretes por Telegram se autorizar aqui e tiver o chat ligado ao Bot.</p>
+                <label style="font-size:12px; display:flex; align-items:center; gap:8px; cursor:pointer;">
+                  <input type="checkbox" id="contact-telegram-auth"> Cliente autoriza notificações Telegram
+                </label>
+                <div style="display:flex; gap:10px; margin-top:8px;">
+                  <input type="text" id="contact-telegram-id" class="form-control" placeholder="Preenchido automaticamente após /start CÓDIGO">
+                  <button type="button" class="btn btn-secondary" style="font-size:11px; white-space:nowrap;" onclick="alert('Link do Bot Telegram Gerado!')">Gerar link Telegram</button>
+                </div>
+              </div>
+
+              <!-- Observações -->
+              <div class="form-group full-width" style="margin-top:12px;">
+                <label>Observações Gerais do Contacto</label>
+                <textarea id="contact-notes" class="form-control" rows="3" placeholder="Efetuedo CPCV e passagem de nome da benfeitoria no dia 03/08/2026. Processo Concluído."></textarea>
+              </div>
+
+              <!-- Anexos de Documentos (Imagem 6) -->
+              <div class="form-group full-width" style="margin-top:12px; border-top:1px solid var(--border-color); padding-top:12px;">
+                <label style="font-size:13px;">Armazenamento Permanente de Documentos</label>
+                <input type="file" id="contact-file-upload" class="form-control" style="margin-top:6px;">
+                <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Nenhum documento armazenado para este contacto.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: IMÓVEL PREFERÊNCIAS (Imagens 7 & 8) -->
+          <div class="tab-content" id="contact-tab-2">
+            <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-ai" onclick="alert('Gemini: Análise Inteligente do perfil realizada.')">✨ Análise Inteligente com Gemini</button>
+              <button type="button" class="btn btn-ai" onclick="alert('Gemini: Imóveis compatíveis filtrados.')">🔍 Sugerir Imóveis Disponíveis com Gemini</button>
+            </div>
+
+            <div class="form-group full-width" style="margin-bottom:16px;">
+              <label>Tipo de negócio</label>
+              <div class="pill-selector-group">
+                <div class="pill-btn active" onclick="selectPill(this)">Comprar</div>
+                <div class="pill-btn" onclick="selectPill(this)">Vender</div>
+                <div class="pill-btn" onclick="selectPill(this)">Arrendar</div>
+                <div class="pill-btn" onclick="selectPill(this)">Trespassar</div>
+                <div class="pill-btn" onclick="selectPill(this)">Permuta</div>
+              </div>
+            </div>
+
+            <div class="form-group full-width" style="margin-bottom:16px;">
+              <label>Tipo de imóvel</label>
+              <div class="pill-selector-group">
+                <div class="pill-btn" onclick="selectPill(this)">Casa</div>
+                <div class="pill-btn" onclick="selectPill(this)">Prédio</div>
+                <div class="pill-btn" onclick="selectPill(this)">Apartamento</div>
+                <div class="pill-btn active" onclick="selectPill(this)">Terreno</div>
+                <div class="pill-btn" onclick="selectPill(this)">Moradia</div>
+                <div class="pill-btn" onclick="selectPill(this)">Loja</div>
+                <div class="pill-btn" onclick="selectPill(this)">Armazém</div>
+              </div>
+            </div>
+
+            <div class="form-group full-width" style="margin-bottom:16px;">
+              <label>Tipologia</label>
+              <div class="pill-selector-group">
+                <div class="pill-btn" onclick="selectPill(this)">T0</div>
+                <div class="pill-btn" onclick="selectPill(this)">T1</div>
+                <div class="pill-btn" onclick="selectPill(this)">T2</div>
+                <div class="pill-btn" onclick="selectPill(this)">T3</div>
+                <div class="pill-btn" onclick="selectPill(this)">T4</div>
+                <div class="pill-btn" onclick="selectPill(this)">T5 ou superior</div>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Distrito</label>
+                <div style="display:flex; flex-wrap:wrap; gap:4px; align-items:center;">
+                  <span class="tag-pill">Setúbal ✕</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Concelho</label>
+                <div style="display:flex; flex-wrap:wrap; gap:4px; align-items:center;">
+                  <span class="tag-pill">Almada ✕</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Freguesia</label>
+                <div style="display:flex; flex-wrap:wrap; gap:4px; align-items:center;">
+                  <span class="tag-pill">Fernão Ferro ✕</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Bairro</label>
+                <div style="display:flex; flex-wrap:wrap; gap:4px; align-items:center;">
+                  <span class="tag-pill">Parque Verde ✕</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Preço mínimo (€)</label>
+                <input type="number" id="pref-min-price" class="form-control" value="89990">
+              </div>
+              <div class="form-group">
+                <label>Preço máximo (€)</label>
+                <input type="number" id="pref-max-price" class="form-control" value="89989">
+              </div>
+            </div>
+
+            <div style="margin-top:20px; font-weight:600; font-size:13px; margin-bottom:10px;">Perfil financeiro</div>
+            <div class="form-group full-width" style="margin-bottom:12px;">
+              <label>Modalidade</label>
+              <div class="pill-selector-group">
+                <div class="pill-btn" onclick="selectPill(this)">Crédito Habitação</div>
+                <div class="pill-btn active" onclick="selectPill(this)">Pronto Pagamento</div>
+              </div>
+            </div>
             <div class="form-group full-width">
-              <label>Nome Completo</label>
-              <input type="text" id="contact-name" class="form-control" required>
+              <label>Percentual do sinal (CPCV)</label>
+              <div class="pill-selector-group">
+                <div class="pill-btn" onclick="selectPill(this)">10%</div>
+                <div class="pill-btn" onclick="selectPill(this)">15%</div>
+                <div class="pill-btn active" onclick="selectPill(this)">20%</div>
+                <div class="pill-btn" onclick="selectPill(this)">Mais de 20%</div>
+              </div>
             </div>
-            <div class="form-group">
-              <label>Email</label>
-              <input type="email" id="contact-email" class="form-control">
+          </div>
+
+          <!-- TAB 3: HISTÓRICO E TAREFAS (Imagem 9) -->
+          <div class="tab-content" id="contact-tab-3">
+            <div style="font-weight:600; font-size:14px; margin-bottom:12px;">Novo registo</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Tipo de interação</label>
+                <select id="hist-interaction-type" class="form-control">
+                  <option value="Chamada">Chamada</option>
+                  <option value="Reunião">Reunião</option>
+                  <option value="Email">Email</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Assunto / resumo</label>
+                <input type="text" id="hist-subject" class="form-control">
+              </div>
+              <div class="form-group full-width">
+                <label>Detalhes da conversa</label>
+                <textarea id="hist-details" class="form-control" rows="2"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Data da próxima ação *</label>
+                <input type="datetime-local" id="hist-next-date" class="form-control">
+              </div>
+              <div class="form-group">
+                <label>Tipo da próxima ação *</label>
+                <select id="hist-next-type" class="form-control">
+                  <option value="Contacto Geral">Contacto Geral</option>
+                  <option value="Agendamento de Visita">Agendamento de Visita</option>
+                  <option value="Assinatura de CPCV">Assinatura de CPCV</option>
+                </select>
+              </div>
+              <div class="form-group full-width">
+                <label>Descrição da próxima ação *</label>
+                <input type="text" id="hist-next-desc" class="form-control" placeholder="Ex.: enviar proposta">
+              </div>
             </div>
-            <div class="form-group">
-              <label>Telefone</label>
-              <input type="text" id="contact-phone" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Tipo de Cliente</label>
-              <select id="contact-type" class="form-control">
-                <option value="Comprador">Comprador</option>
-                <option value="Vendedor">Vendedor</option>
-                <option value="Arrendatário">Arrendatário</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Origem</label>
-              <input type="text" id="contact-origin" class="form-control" placeholder="ex: idealista, Amigo">
-            </div>
-            <div class="form-group full-width">
-              <label>Morada</label>
-              <input type="text" id="contact-address" class="form-control">
+            <button type="button" class="btn btn-primary" style="margin-top:16px;" onclick="addHistoryItem()">Adicionar ao histórico</button>
+
+            <div style="margin-top:24px; font-weight:600; font-size:14px; margin-bottom:12px;">Linha do tempo</div>
+            <div id="contact-timeline-list" style="color:var(--text-muted); font-size:13px;">
+              Sem registos ainda.
             </div>
           </div>
         </form>
       </div>
+
       <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('modal-contacto')">Cancelar</button>
-        <button class="btn btn-primary" onclick="document.getElementById('form-contacto').requestSubmit()">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-          <span>Guardar Contacto</span>
-        </button>
+        <button type="button" class="btn btn-danger" onclick="deleteCurrentContact()">Eliminar contacto</button>
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('form-contacto').requestSubmit()">Guardar alterações</button>
       </div>
     </div>
   </div>
@@ -1019,7 +1164,7 @@
           <div class="form-grid">
             <div class="form-group full-width">
               <label>Título do Imóvel</label>
-              <input type="text" id="prop-title" class="form-control" placeholder="ex: Apartamento T2 com Quintal em Almada" required>
+              <input type="text" id="prop-title" class="form-control" placeholder="ex: Terreno Rua João de Deus - Charneca da Caparica" required>
             </div>
             <div class="form-group">
               <label>Preço (€)</label>
@@ -1030,12 +1175,8 @@
               <input type="text" id="prop-tags" class="form-control" placeholder="ex: Apartamento · T2">
             </div>
             <div class="form-group">
-              <label>Localização / Concelho</label>
+              <label>Concelho</label>
               <input type="text" id="prop-concelho" class="form-control" placeholder="ex: Almada, Lisboa">
-            </div>
-            <div class="form-group">
-              <label>Proprietário / Vendedor Associado</label>
-              <select id="prop-seller" class="form-control"></select>
             </div>
             <div class="form-group full-width">
               <label>URL da Imagem</label>
@@ -1046,10 +1187,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('modal-imovel')">Cancelar</button>
-        <button class="btn btn-primary" onclick="document.getElementById('form-imovel').requestSubmit()">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-          <span>Guardar Imóvel</span>
-        </button>
+        <button class="btn btn-primary" onclick="document.getElementById('form-imovel').requestSubmit()">Guardar Imóvel</button>
       </div>
     </div>
   </div>
@@ -1066,14 +1204,14 @@
           <div class="form-grid">
             <div class="form-group full-width">
               <label>Título do Negócio</label>
-              <input type="text" id="deal-title" class="form-control" placeholder="ex: Venda Terreno Charneca da Caparica" required>
+              <input type="text" id="deal-title" class="form-control" placeholder="ex: Terreno Rua João de Deus - Charneca da Caparica" required>
             </div>
             <div class="form-group">
               <label>Cliente Associado</label>
               <select id="deal-contact" class="form-control" required></select>
             </div>
             <div class="form-group">
-              <label>Imóvel Associado (Opcional)</label>
+              <label>Imóvel Associado</label>
               <select id="deal-property" class="form-control"></select>
             </div>
             <div class="form-group">
@@ -1083,11 +1221,10 @@
             <div class="form-group">
               <label>Fase do Negócio</label>
               <select id="deal-stage" class="form-control">
+                <option value="Negócios em aberto">Negócios em aberto</option>
                 <option value="Qualificação">Qualificação</option>
-                <option value="Visita Agendada">Visita Agendada</option>
                 <option value="Proposta Apresentada">Proposta Apresentada</option>
                 <option value="CPCV Assinado">CPCV Assinado</option>
-                <option value="Escriturado">Escriturado / Fechado</option>
               </select>
             </div>
           </div>
@@ -1095,10 +1232,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('modal-deal')">Cancelar</button>
-        <button class="btn btn-primary" onclick="document.getElementById('form-deal').requestSubmit()">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-          <span>Guardar Negócio</span>
-        </button>
+        <button class="btn btn-primary" onclick="document.getElementById('form-deal').requestSubmit()">Guardar Negócio</button>
       </div>
     </div>
   </div>
@@ -1114,31 +1248,31 @@
         <form id="form-task" onsubmit="saveTask(event)">
           <div class="form-grid">
             <div class="form-group full-width">
-              <label>Descrição da Tarefa</label>
-              <input type="text" id="task-title" class="form-control" placeholder="ex: Agendamento de visita com cliente" required>
+              <label>Título / Descrição da Tarefa</label>
+              <input type="text" id="task-title" class="form-control" placeholder="ex: Escritura – previsão até 5 meses após..." required>
             </div>
             <div class="form-group">
               <label>Categoria</label>
               <select id="task-category" class="form-control">
-                <option value="Agendamento de Visita">Agendamento de Visita</option>
                 <option value="Assinatura de CPCV">Assinatura de CPCV</option>
+                <option value="Agendamento de Visita">Agendamento de Visita</option>
                 <option value="Contacto Geral">Contacto Geral</option>
-                <option value="Follow-up">Follow-up</option>
               </select>
             </div>
             <div class="form-group">
               <label>Cliente Associado</label>
               <select id="task-contact" class="form-control"></select>
             </div>
+            <div class="form-group full-width">
+              <label>Data e Hora Prazo</label>
+              <input type="datetime-local" id="task-date" class="form-control">
+            </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('modal-task')">Cancelar</button>
-        <button class="btn btn-primary" onclick="document.getElementById('form-task').requestSubmit()">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
-          <span>Criar Tarefa</span>
-        </button>
+        <button class="btn btn-primary" onclick="document.getElementById('form-task').requestSubmit()">Criar Tarefa</button>
       </div>
     </div>
   </div>
@@ -1167,7 +1301,6 @@
       onSnapshot 
     } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-    // FIREBASE CONFIGURATION
     const firebaseConfig = {
       apiKey: "AIzaSyAwRpWCHA1NOHCpwFIA3rjG2K4OsbqPdPM",
       authDomain: "realestateapp-43e70.firebaseapp.com",
@@ -1182,10 +1315,8 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // PERSISTENCE SETTING
     setPersistence(auth, browserLocalPersistence);
 
-    // APP STATE
     let currentUser = null;
     let authMode = 'login';
     let unsubscribes = [];
@@ -1194,28 +1325,17 @@
     let propertiesData = [];
     let dealsData = [];
     let tasksData = [];
+    let currentEditContactId = null;
 
-    // HELPER PARA MENSAGENS DE ERRO AMIGÁVEIS
-    function getFriendlyAuthError(errorCode) {
-      switch (errorCode) {
-        case 'auth/configuration-not-found':
-          return 'O login por E-mail/Palavra-passe precisa de estar ativado na consola do Firebase. Vá a Firebase Console > Authentication > Sign-in method e ative "E-mail/Palavra-passe".';
-        case 'auth/invalid-credential':
-        case 'auth/wrong-password':
-        case 'auth/user-not-found':
-          return 'Email ou palavra-passe incorretos.';
-        case 'auth/email-already-in-use':
-          return 'Este email já está a ser utilizado por outra conta.';
-        case 'auth/weak-password':
-          return 'A palavra-passe deve ter pelo menos 6 caracteres.';
-        case 'auth/invalid-email':
-          return 'O formato do email introduzido é inválido.';
-        default:
-          return 'Erro na autenticação. Verifique os seus dados.';
+    function getFriendlyAuthError(code) {
+      switch (code) {
+        case 'auth/configuration-not-found': return 'O login por Email precisa de estar ativo no Firebase Console (Authentication > Sign-in method).';
+        case 'auth/invalid-credential': return 'Email ou palavra-passe incorretos.';
+        case 'auth/email-already-in-use': return 'Este email já está registado.';
+        default: return 'Ocorreu um erro ao autenticar. Tente novamente.';
       }
     }
 
-    // AUTH TAB SWITCHING
     window.switchAuthMode = (mode) => {
       authMode = mode;
       document.getElementById('auth-tab-login').classList.toggle('active', mode === 'login');
@@ -1244,7 +1364,6 @@
       }
     };
 
-    // AUTH SUBMIT HANDLER
     window.handleAuthSubmit = async (e) => {
       e.preventDefault();
       const email = document.getElementById('auth-email').value.trim();
@@ -1257,13 +1376,8 @@
 
       try {
         if (authMode === 'reset') {
-          if (!email) {
-            errorEl.innerText = "Por favor, insira o seu e-mail.";
-            errorEl.style.display = 'block';
-            return;
-          }
           await sendPasswordResetEmail(auth, email);
-          successEl.innerText = "Email de reposição enviado! Verifique a sua caixa de entrada.";
+          successEl.innerText = "Email enviado! Verifique a sua caixa de entrada.";
           successEl.style.display = 'block';
         } else if (authMode === 'login') {
           await signInWithEmailAndPassword(auth, email, password);
@@ -1277,14 +1391,12 @@
       }
     };
 
-    // AUTH STATE LISTENER
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUser = user;
         document.getElementById('auth-overlay').style.display = 'none';
         document.getElementById('app-container').style.display = 'flex';
         
-        // Load User Preferences
         try {
           const prefDoc = await getDoc(doc(db, 'users', currentUser.uid, 'settings', 'config'));
           if (prefDoc.exists() && prefDoc.data().theme) {
@@ -1294,7 +1406,6 @@
           }
         } catch(e){}
 
-        // Start Realtime DB Listeners
         initFirestoreListeners();
       } else {
         currentUser = null;
@@ -1305,27 +1416,20 @@
       }
     });
 
-    window.handleLogout = async () => {
-      await signOut(auth);
-    };
+    window.handleLogout = async () => { await signOut(auth); };
 
     window.toggleTheme = async (isLight) => {
       document.body.classList.toggle('light-mode', isLight);
       if (currentUser) {
-        await setDoc(doc(db, 'users', currentUser.uid, 'settings', 'config'), { 
-          theme: isLight ? 'light' : 'dark' 
-        }, { merge: true });
+        await setDoc(doc(db, 'users', currentUser.uid, 'settings', 'config'), { theme: isLight ? 'light' : 'dark' }, { merge: true });
       }
     };
 
-    // REALTIME FIRESTORE LISTENERS
     function initFirestoreListeners() {
       unsubscribes.forEach(unsub => unsub());
       unsubscribes = [];
-
       const uid = currentUser.uid;
 
-      // Contacts
       unsubscribes.push(onSnapshot(collection(db, 'users', uid, 'contactos'), snapshot => {
         contactsData = [];
         snapshot.forEach(doc => contactsData.push({ id: doc.id, ...doc.data() }));
@@ -1334,7 +1438,6 @@
         updateDashboardKPIs();
       }));
 
-      // Properties
       unsubscribes.push(onSnapshot(collection(db, 'users', uid, 'imoveis'), snapshot => {
         propertiesData = [];
         snapshot.forEach(doc => propertiesData.push({ id: doc.id, ...doc.data() }));
@@ -1342,7 +1445,6 @@
         updateSelectDropdowns();
       }));
 
-      // Deals / Pipeline
       unsubscribes.push(onSnapshot(collection(db, 'users', uid, 'pipeline'), snapshot => {
         dealsData = [];
         snapshot.forEach(doc => dealsData.push({ id: doc.id, ...doc.data() }));
@@ -1350,7 +1452,6 @@
         updateDashboardKPIs();
       }));
 
-      // Tasks
       unsubscribes.push(onSnapshot(collection(db, 'users', uid, 'tarefas'), snapshot => {
         tasksData = [];
         snapshot.forEach(doc => tasksData.push({ id: doc.id, ...doc.data() }));
@@ -1359,53 +1460,36 @@
       }));
     }
 
-    // UPDATE DROPDOWNS FOR INTERLINKED LOGIC
     function updateSelectDropdowns() {
-      const sellerSel = document.getElementById('prop-seller');
       const dealContactSel = document.getElementById('deal-contact');
       const dealPropSel = document.getElementById('deal-property');
       const taskContactSel = document.getElementById('task-contact');
-
-      if (sellerSel) {
-        sellerSel.innerHTML = '<option value="">Sem proprietário associado</option>' + 
-          contactsData.map(c => `<option value="${c.id}">${c.name} (${c.type})</option>`).join('');
-      }
 
       if (dealContactSel) {
         dealContactSel.innerHTML = '<option value="">Selecionar Cliente...</option>' + 
           contactsData.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
       }
-
       if (dealPropSel) {
         dealPropSel.innerHTML = '<option value="">Nenhum / Não aplicável</option>' + 
           propertiesData.map(p => `<option value="${p.id}">${p.title}</option>`).join('');
       }
-
       if (taskContactSel) {
         taskContactSel.innerHTML = '<option value="">Nenhum cliente associado</option>' + 
           contactsData.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
       }
     }
 
-    // RENDER FUNCTIONS
-    function renderContacts() {
+    /* RENDER FUNCTIONS */
+    function renderContacts(data = contactsData) {
       const tbody = document.getElementById('contacts-table-body');
       tbody.innerHTML = '';
 
-      if (contactsData.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6">
-              <div class="empty-state">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-                <span>Nenhum contacto adicionado à sua base de dados.</span>
-              </div>
-            </td>
-          </tr>`;
+      if (data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg><span>Nenhum contacto encontrado.</span></td></tr>`;
         return;
       }
 
-      contactsData.forEach(c => {
+      data.forEach(c => {
         const badgeClass = c.type === 'Comprador' ? 'badge-buyer' : 'badge-seller';
         tbody.innerHTML += `
           <tr>
@@ -1414,14 +1498,19 @@
             <td>${c.phone || '—'}</td>
             <td>
               <span class="badge ${badgeClass}">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 ${c.type}
               </span>
             </td>
             <td>${c.origin || 'Particular'}</td>
             <td>
               <div class="action-icons">
-                <button class="btn-icon" title="Eliminar Contacto" onclick="deleteDocItem('contactos', '${c.id}')">
+                <button class="btn-icon" title="Editar" onclick="openContactModal('${c.id}')">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </button>
+                <button class="btn-icon" title="Duplicar" onclick="duplicateContact('${c.id}')">
+                  <svg class="icon" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+                <button class="btn-icon" title="Eliminar" onclick="deleteDocItem('contactos', '${c.id}')">
                   <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
               </div>
@@ -1436,11 +1525,7 @@
       container.innerHTML = '';
 
       if (propertiesData.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state" style="grid-column: 1 / -1;">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-            <span>Nenhum imóvel registado na sua carteira.</span>
-          </div>`;
+        container.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><svg class="icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg><span>Nenhum imóvel cadastrado.</span></div>`;
         return;
       }
 
@@ -1448,27 +1533,26 @@
         container.innerHTML += `
           <div class="property-card">
             <div class="property-card-img-wrapper">
-              <button class="property-card-delete" title="Eliminar Imóvel" onclick="deleteDocItem('imoveis', '${p.id}')">
+              <input type="checkbox" class="property-card-chk">
+              <button class="property-card-delete" onclick="deleteDocItem('imoveis', '${p.id}')">
                 <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
               </button>
               <img src="${p.img || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80'}" class="property-card-img">
             </div>
             <div class="property-card-body">
               <div class="property-title">${p.title}</div>
-              <div class="property-tags">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <span>${p.tags || 'Casa'} • ${p.concelho || 'Local'}</span>
-              </div>
+              <div class="property-tags">${p.tags || 'Casa'} • ${p.concelho || 'Local'}</div>
               <div class="property-price">${p.price} €</div>
+              <div style="font-size:11px; color:var(--accent); cursor:pointer; margin-top:auto;" onclick="alert('Link da fonte original do imóvel.')">Fonte original</div>
             </div>
             <div class="property-card-footer">
-              <span style="font-size:11px; color:var(--text-muted); display:inline-flex; align-items:center; gap:4px;">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                Divulgação Ativa
+              <span style="display:flex; align-items:center; gap:4px; font-size:11px; color:var(--text-muted);">
+                <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle></svg>
+                Robô de Divulgação Automática
               </span>
-              <button class="btn btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="alert('Campanha de email enviada!')">
+              <button class="btn btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="alert('Campanha de email marketing iniciada para este imóvel!')">
                 <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <span>A - Email Marketing</span>
+                A – Email Marketing
               </button>
             </div>
           </div>
@@ -1481,15 +1565,7 @@
       tbody.innerHTML = '';
 
       if (dealsData.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6">
-              <div class="empty-state">
-                <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
-                <span>Nenhum negócio ativo no pipeline.</span>
-              </div>
-            </td>
-          </tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"></line></svg><span>Nenhum negócio no pipeline.</span></td></tr>`;
         return;
       }
 
@@ -1503,9 +1579,9 @@
             <td>${contact ? contact.name : '—'}</td>
             <td>${prop ? prop.title : '—'}</td>
             <td><span class="badge badge-seller">${d.stage}</span></td>
-            <td style="font-weight:700;">${d.value} €</td>
+            <td style="font-weight:700; color:var(--accent);">${d.value} €</td>
             <td>
-              <button class="btn-icon" title="Eliminar Negócio" onclick="deleteDocItem('pipeline', '${d.id}')">
+              <button class="btn-icon" onclick="deleteDocItem('pipeline', '${d.id}')">
                 <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
               </button>
             </td>
@@ -1514,40 +1590,39 @@
       });
     }
 
-    function renderTasks() {
+    function renderTasks(data = tasksData) {
       const container = document.getElementById('tasks-list-container');
       container.innerHTML = '';
 
-      if (tasksData.length === 0) {
-        container.innerHTML = `
-          <div class="empty-state">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
-            <span>Sem tarefas pendentes.</span>
-          </div>`;
+      if (data.length === 0) {
+        container.innerHTML = `<div class="empty-state"><svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"></path></svg><span>Sem tarefas pendentes.</span></div>`;
         return;
       }
 
-      tasksData.forEach(t => {
+      data.forEach(t => {
         const contact = contactsData.find(c => c.id === t.contactId);
+        const isDone = t.status === 'Concluída';
+        const badgeClass = isDone ? 'badge-completed' : 'badge-pending';
+
         container.innerHTML += `
-          <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
-            <div>
-              <div style="font-weight: 600; font-size: 14px;">${t.title}</div>
-              <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px; display:flex; align-items:center; gap:12px;">
-                <span style="display:inline-flex; align-items:center; gap:4px;">
-                  <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                  ${t.category}
-                </span>
-                ${contact ? `
-                  <span style="display:inline-flex; align-items:center; gap:4px;">
-                    <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    ${contact.name}
-                  </span>` : ''}
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border-color);">
+            <div style="display: flex; gap: 12px; align-items: flex-start;">
+              <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleTaskDone('${t.id}', this.checked)" style="margin-top: 4px;">
+              <div>
+                <div style="font-weight: 600; font-size: 14px; ${isDone ? 'text-decoration: line-through; color: var(--text-muted);' : ''}">${t.title}</div>
+                <div style="display: flex; gap: 8px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                  <span class="badge ${badgeClass}">${t.status || 'Pendente'}</span>
+                  <span class="badge" style="background:var(--input-bg); color:var(--text-main);">${t.category}</span>
+                  ${contact ? `<span style="font-size: 12px; color: var(--text-muted);">👤 ${contact.name}</span>` : ''}
+                  ${t.date ? `<span style="font-size: 12px; color: var(--red-status); font-weight: 500;">${t.date}</span>` : ''}
+                </div>
               </div>
             </div>
-            <button class="btn-icon" title="Eliminar Tarefa" onclick="deleteDocItem('tarefas', '${t.id}')">
-              <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-            </button>
+            <div class="action-icons">
+              <button class="btn-icon" onclick="deleteDocItem('tarefas', '${t.id}')">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              </button>
+            </div>
           </div>
         `;
       });
@@ -1555,19 +1630,15 @@
 
     function updateDashboardKPIs() {
       document.getElementById('kpi-contacts').innerText = contactsData.length;
-      document.getElementById('kpi-deals').innerText = dealsData.filter(d => d.stage !== 'Escriturado').length;
-      document.getElementById('kpi-tasks').innerText = tasksData.length;
+      document.getElementById('kpi-deals').innerText = dealsData.length;
+      document.getElementById('kpi-tasks').innerText = tasksData.filter(t => t.status !== 'Concluída').length;
 
       const totalVal = dealsData.reduce((acc, d) => acc + (parseFloat(d.value) || 0), 0);
       document.getElementById('kpi-pipeline-val').innerText = totalVal.toLocaleString('pt-PT') + ' €';
 
       const dealsListEl = document.getElementById('dashboard-deals-list');
       if (dealsData.length === 0) {
-        dealsListEl.innerHTML = `
-          <div class="empty-state">
-            <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
-            <span>Nenhum negócio ativo registado no pipeline.</span>
-          </div>`;
+        dealsListEl.innerHTML = `<div class="empty-state"><svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"></line></svg><span>Nenhum negócio ativo registado.</span></div>`;
       } else {
         dealsListEl.innerHTML = dealsData.map(d => {
           const contact = contactsData.find(c => c.id === d.contactId);
@@ -1575,14 +1646,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
               <div>
                 <div style="font-weight: 600; font-size: 14px;">${d.title}</div>
-                <div style="font-size: 12px; color: var(--text-muted); display:flex; align-items:center; gap:8px; margin-top:2px;">
-                  <span style="display:inline-flex; align-items:center; gap:4px;">
-                    <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    ${contact ? contact.name : '—'}
-                  </span>
-                  <span>•</span>
-                  <span>Fase: ${d.stage}</span>
-                </div>
+                <div style="font-size: 12px; color: var(--text-muted);">Cliente: ${contact ? contact.name : '—'}</div>
               </div>
               <div style="font-weight: 700; font-size: 15px; color: var(--accent);">${d.value} €</div>
             </div>
@@ -1591,24 +1655,114 @@
       }
     }
 
-    // CRUD ACTIONS
-    window.saveContact = async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('contact-name').value.trim();
-      if (!name) return;
+    /* FILTERS & ACTIONS */
+    window.filterContactsTable = () => {
+      const text = document.getElementById('filter-contact-text').value.toLowerCase();
+      const type = document.getElementById('filter-contact-type').value;
+      const origin = document.getElementById('filter-contact-origin').value;
 
-      await addDoc(collection(db, 'users', currentUser.uid, 'contactos'), {
-        name,
-        email: document.getElementById('contact-email').value.trim(),
-        phone: document.getElementById('contact-phone').value.trim(),
-        type: document.getElementById('contact-type').value,
-        origin: document.getElementById('contact-origin').value.trim(),
-        address: document.getElementById('contact-address').value.trim(),
-        createdAt: Date.now()
+      const filtered = contactsData.filter(c => {
+        const matchesText = !text || c.name.toLowerCase().includes(text) || (c.email && c.email.toLowerCase().includes(text)) || (c.phone && c.phone.includes(text));
+        const matchesType = type === 'Todos' || c.type === type;
+        const matchesOrigin = origin === 'Todas' || c.origin === origin;
+        return matchesText && matchesType && matchesOrigin;
       });
 
-      closeModal('modal-contacto');
-      e.target.reset();
+      renderContacts(filtered);
+    };
+
+    window.filterTasksList = () => {
+      const status = document.getElementById('filter-task-status').value;
+      const cat = document.getElementById('filter-task-cat').value;
+
+      const filtered = tasksData.filter(t => {
+        const matchesStatus = status === 'Todos' || (t.status || 'Pendente') === status;
+        const matchesCat = cat === 'Todos' || t.category === cat;
+        return matchesStatus && matchesCat;
+      });
+
+      renderTasks(filtered);
+    };
+
+    window.exportContactsCSV = () => {
+      if (contactsData.length === 0) return alert("Sem contactos para exportar.");
+      let csv = "Nome,Email,Telefone,Tipo,Origem,Morada\n";
+      contactsData.forEach(c => {
+        csv += `"${c.name}","${c.email||''}","${c.phone||''}","${c.type||''}","${c.origin||''}","${c.address||''}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('href', url);
+      a.setAttribute('download', 'contactos_imovio.csv');
+      a.click();
+    };
+
+    window.duplicateContact = async (contactId) => {
+      const c = contactsData.find(x => x.id === contactId);
+      if (c) {
+        const copy = { ...c, name: c.name + " (Cópia)", createdAt: Date.now() };
+        delete copy.id;
+        await addDoc(collection(db, 'users', currentUser.uid, 'contactos'), copy);
+      }
+    };
+
+    /* CRUD SAVES */
+    window.saveContact = async (e) => {
+      e.preventDefault();
+      try {
+        const name = document.getElementById('contact-name').value.trim();
+        if (!name) return alert("Por favor insira um nome.");
+
+        const payload = {
+          name,
+          email: document.getElementById('contact-email').value.trim(),
+          phone: document.getElementById('contact-phone').value.trim(),
+          type: document.getElementById('contact-type').value,
+          origin: document.getElementById('contact-origin').value.trim(),
+          birth: document.getElementById('contact-birth').value,
+          nif: document.getElementById('contact-nif').value.trim(),
+          idType: document.getElementById('contact-id-type').value,
+          idNum: document.getElementById('contact-id-num').value.trim(),
+          address: document.getElementById('contact-address').value.trim(),
+          notes: document.getElementById('contact-notes').value.trim(),
+          createdAt: Date.now()
+        };
+
+        if (currentEditContactId) {
+          await setDoc(doc(db, 'users', currentUser.uid, 'contactos', currentEditContactId), payload, { merge: true });
+        } else {
+          await addDoc(collection(db, 'users', currentUser.uid, 'contactos'), payload);
+        }
+
+        closeModal('modal-contacto');
+        e.target.reset();
+      } catch (err) {
+        alert("Erro ao guardar no Firebase: " + err.message);
+      }
+    };
+
+    window.addHistoryItem = async () => {
+      const type = document.getElementById('hist-interaction-type').value;
+      const subject = document.getElementById('hist-subject').value.trim();
+      const details = document.getElementById('hist-details').value.trim();
+      const nextDate = document.getElementById('hist-next-date').value;
+      const nextType = document.getElementById('hist-next-type').value;
+      const nextDesc = document.getElementById('hist-next-desc').value.trim();
+
+      if (!subject && !details) return alert("Preencha pelo menos o assunto ou detalhes.");
+
+      if (currentEditContactId) {
+        await addDoc(collection(db, 'users', currentUser.uid, 'contactos', currentEditContactId, 'historico'), {
+          type, subject, details, nextDate, nextType, nextDesc, timestamp: Date.now()
+        });
+        alert("Registo adicionado ao histórico com sucesso!");
+        document.getElementById('hist-subject').value = '';
+        document.getElementById('hist-details').value = '';
+        document.getElementById('hist-next-desc').value = '';
+      } else {
+        alert("Guarde o contacto primeiro antes de adicionar histórico.");
+      }
     };
 
     window.saveProperty = async (e) => {
@@ -1618,11 +1772,9 @@
         price: document.getElementById('prop-price').value,
         tags: document.getElementById('prop-tags').value.trim(),
         concelho: document.getElementById('prop-concelho').value.trim(),
-        sellerId: document.getElementById('prop-seller').value,
         img: document.getElementById('prop-img').value.trim(),
         createdAt: Date.now()
       });
-
       closeModal('modal-imovel');
       e.target.reset();
     };
@@ -1637,7 +1789,6 @@
         stage: document.getElementById('deal-stage').value,
         createdAt: Date.now()
       });
-
       closeModal('modal-deal');
       e.target.reset();
     };
@@ -1648,11 +1799,18 @@
         title: document.getElementById('task-title').value.trim(),
         category: document.getElementById('task-category').value,
         contactId: document.getElementById('task-contact').value,
+        date: document.getElementById('task-date').value,
+        status: 'Pendente',
         createdAt: Date.now()
       });
-
       closeModal('modal-task');
       e.target.reset();
+    };
+
+    window.toggleTaskDone = async (taskId, isChecked) => {
+      await setDoc(doc(db, 'users', currentUser.uid, 'tarefas', taskId), {
+        status: isChecked ? 'Concluída' : 'Pendente'
+      }, { merge: true });
     };
 
     window.deleteDocItem = async (col, docId) => {
@@ -1661,52 +1819,89 @@
       }
     };
 
-    // UI CONTROL HELPERS
+    window.deleteCurrentContact = async () => {
+      if (currentEditContactId) {
+        await deleteDocItem('contactos', currentEditContactId);
+        closeModal('modal-contacto');
+      }
+    };
+
+    /* CONTACT MODAL HELPERS */
+    window.openContactModal = (contactId = null) => {
+      currentEditContactId = contactId;
+      switchContactTab(1);
+
+      if (contactId) {
+        const c = contactsData.find(x => x.id === contactId);
+        document.getElementById('modal-contact-title').innerText = 'Editar contacto';
+        document.getElementById('contact-name').value = c.name || '';
+        document.getElementById('contact-email').value = c.email || '';
+        document.getElementById('contact-phone').value = c.phone || '';
+        document.getElementById('contact-type').value = c.type || 'Comprador';
+        document.getElementById('contact-origin').value = c.origin || '';
+        document.getElementById('contact-birth').value = c.birth || '';
+        document.getElementById('contact-nif').value = c.nif || '';
+        document.getElementById('contact-id-type').value = c.idType || 'Cartão de Cidadão';
+        document.getElementById('contact-id-num').value = c.idNum || '';
+        document.getElementById('contact-address').value = c.address || '';
+        document.getElementById('contact-notes').value = c.notes || '';
+      } else {
+        document.getElementById('modal-contact-title').innerText = 'Novo contacto';
+        document.getElementById('form-contacto').reset();
+      }
+
+      document.getElementById('modal-contacto').classList.add('active');
+    };
+
+    window.switchContactTab = (num) => {
+      document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      document.getElementById(`tab-btn-${num}`).classList.add('active');
+      document.getElementById(`contact-tab-${num}`).classList.add('active');
+    };
+
+    window.selectPill = (el) => {
+      el.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+    };
+
     window.switchPage = (pageId, element) => {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
       document.getElementById(pageId).classList.add('active');
       if (element) element.classList.add('active');
+
+      const pageTitles = {
+        'page-dashboard': 'Dashboard',
+        'page-contactos': 'Contactos',
+        'page-imoveis': 'Dashboard de Imóveis',
+        'page-pipeline': 'Pipeline',
+        'page-tarefas': 'Tarefas',
+        'page-configuracoes': 'Configurações'
+      };
+      document.getElementById('page-header-title').innerText = pageTitles[pageId] || 'Imovio';
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('open');
     };
 
     window.toggleSidebar = () => {
       document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('sidebar-overlay').classList.toggle('open');
     };
 
-    window.openContactModal = () => document.getElementById('modal-contacto').classList.add('active');
     window.openPropertyModal = () => document.getElementById('modal-imovel').classList.add('active');
     window.openDealModal = () => document.getElementById('modal-deal').classList.add('active');
     window.openTaskModal = () => document.getElementById('modal-task').classList.add('active');
-
     window.closeModal = (id) => document.getElementById(id).classList.remove('active');
 
     window.handleGlobalSearch = (query) => {
       const q = query.toLowerCase();
-      if (!q) {
-        renderContacts();
-        return;
-      }
+      if (!q) { renderContacts(); return; }
       const filtered = contactsData.filter(c => c.name.toLowerCase().includes(q) || (c.email && c.email.toLowerCase().includes(q)));
-      const tbody = document.getElementById('contacts-table-body');
-      tbody.innerHTML = filtered.map(c => `
-        <tr>
-          <td style="font-weight: 600;">${c.name}</td>
-          <td>${c.email || '—'}</td>
-          <td>${c.phone || '—'}</td>
-          <td>
-            <span class="badge badge-buyer">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-              ${c.type}
-            </span>
-          </td>
-          <td>${c.origin || 'Particular'}</td>
-          <td>
-            <button class="btn-icon" title="Eliminar Contacto" onclick="deleteDocItem('contactos', '${c.id}')">
-              <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-            </button>
-          </td>
-        </tr>
-      `).join('');
+      renderContacts(filtered);
     };
   </script>
 </body>
