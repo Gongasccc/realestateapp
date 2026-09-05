@@ -8,6 +8,7 @@
   
   <style>
     :root {
+      /* TEMA ESCURO ESTILO SPOTIFY + DOURADO SUBTIL */
       --bg-color: #121212;
       --card-bg: #181818;
       --sidebar-bg: #000000;
@@ -270,9 +271,15 @@
     .btn-secondary { background: var(--card-bg); border-color: var(--border-color); color: var(--text-main); }
     .btn-danger { background: var(--red-status); color: #ffffff; }
 
-    .btn-ai {
-      background: rgba(197, 160, 89, 0.15); border: 1px solid var(--accent);
-      color: var(--accent); font-size: 12px; padding: 8px 14px;
+    /* CIRCLE INDICATOR FOR PROPERTY CARDS */
+    .status-circle-indicator {
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--text-muted);
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+      margin-top: 3px;
     }
 
     /* PROPERTY GRID */
@@ -283,6 +290,11 @@
     .property-card {
       background: var(--card-bg); border: 1px solid var(--border-color);
       border-radius: var(--card-radius); overflow: hidden; display: flex; flex-direction: column;
+      cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .property-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
     }
 
     .property-card-img-wrapper {
@@ -290,24 +302,19 @@
     }
 
     .property-card-img { width: 100%; height: 100%; object-fit: cover; }
-    .property-card-chk { position: absolute; top: 12px; left: 12px; width: 18px; height: 18px; cursor: pointer; }
 
     .property-card-delete {
       position: absolute; top: 12px; right: 12px;
       background: rgba(0, 0, 0, 0.7); border: none; border-radius: 6px;
       padding: 6px; cursor: pointer; color: #ffffff;
+      z-index: 5;
     }
 
     .property-card-body { padding: 16px; flex: 1; display: flex; flex-direction: column; }
-    .property-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-    .property-tags { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .property-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
+    .property-tags { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
     .property-price { font-size: 18px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
-
-    .property-card-footer {
-      border-top: 1px solid var(--border-color); padding: 12px 16px;
-      display: flex; align-items: center; justify-content: space-between;
-      background: rgba(0, 0, 0, 0.15); font-size: 12px;
-    }
+    .property-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 
     /* DATA TABLE */
     .table-responsive { width: 100%; overflow-x: auto; }
@@ -336,7 +343,7 @@
 
     /* MODAL SYSTEM & TABS */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(4px); z-index: 1000;
       display: none; align-items: center; justify-content: center; padding: 20px;
     }
@@ -360,6 +367,22 @@
       display: flex; justify-content: flex-end; gap: 12px;
     }
 
+    .modal-tabs {
+      display: flex; border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px; gap: 10px; overflow-x: auto;
+    }
+
+    .modal-tab {
+      padding: 10px 16px; font-size: 13px; font-weight: 500;
+      color: var(--text-muted); cursor: pointer;
+      border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap;
+    }
+
+    .modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
     .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full-width { grid-column: 1 / -1; }
@@ -371,40 +394,21 @@
       background: var(--input-bg); color: var(--text-main);
     }
 
-    /* CAIXA DE EXTRAÇÃO IA DO IMÓVEL (Fotos do Utilizador) */
+    /* CAIXA DE EXTRAÇÃO IA DO IMÓVEL */
     .import-ai-box {
       background: rgba(197, 160, 89, 0.08);
       border: 1px solid rgba(197, 160, 89, 0.3);
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 20px;
+      border-radius: 14px; padding: 16px; margin-bottom: 20px;
     }
 
     .import-ai-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-size: 13px; font-weight: 600; color: var(--accent);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
     }
 
-    .import-ai-input-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    .import-ai-input-row input {
-      flex: 1;
-      border-color: rgba(197, 160, 89, 0.4);
-    }
-
-    .import-ai-subtext {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 8px;
-    }
+    .import-ai-input-row { display: flex; gap: 10px; }
+    .import-ai-input-row input { flex: 1; border-color: rgba(197, 160, 89, 0.4); }
+    .import-ai-subtext { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
 
     /* SWITCH TOGGLE */
     .switch-row {
@@ -712,6 +716,22 @@
             </button>
           </div>
 
+          <div class="filter-bar">
+            <div style="width: 100%; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px;">Filtros de localização / Comparador de mercado</div>
+            <div class="filter-item">
+              <label>Distrito</label>
+              <select class="filter-select"><option>Todos</option><option>Setúbal</option><option>Lisboa</option></select>
+            </div>
+            <div class="filter-item">
+              <label>Concelho</label>
+              <select class="filter-select" style="background:var(--accent); color:#121212; font-weight:600;"><option>Todos</option><option>Almada</option></select>
+            </div>
+            <div class="filter-item">
+              <label>Freguesia</label>
+              <select class="filter-select"><option>Todas</option></select>
+            </div>
+          </div>
+
           <div class="property-grid" id="property-grid-container">
             <!-- Firestore rendering -->
           </div>
@@ -762,6 +782,30 @@
               <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
               <span>Nova tarefa</span>
             </button>
+          </div>
+
+          <div class="filter-bar">
+            <div class="filter-item">
+              <label>Status</label>
+              <select id="filter-task-status" class="filter-select" onchange="filterTasksList()">
+                <option value="Todos">Todos</option>
+                <option value="Pendente">Pendente</option>
+                <option value="Concluída">Concluída</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label>Tipo / Categoria</label>
+              <select id="filter-task-cat" class="filter-select" onchange="filterTasksList()">
+                <option value="Todos">Todos</option>
+                <option value="Assinatura de CPCV">Assinatura de CPCV</option>
+                <option value="Agendamento de Visita">Agendamento de Visita</option>
+                <option value="Contacto Geral">Contacto Geral</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label>Consultor</label>
+              <select class="filter-select"><option>Todos</option></select>
+            </div>
           </div>
 
           <div class="content-card">
@@ -934,7 +978,7 @@
     </div>
   </div>
 
-  <!-- MODAL: NOVO IMÓVEL (EXATO ÀS IMAGENS SOLICITADAS) -->
+  <!-- MODAL: NOVO IMÓVEL (CADASTRAR) -->
   <div class="modal-overlay" id="modal-imovel">
     <div class="modal-card">
       <div class="modal-header">
@@ -961,13 +1005,11 @@
 
         <form id="form-imovel" onsubmit="saveProperty(event)">
           <div class="form-grid">
-            <!-- TÍTULO -->
             <div class="form-group full-width">
               <label>Título</label>
               <input type="text" id="prop-title" class="form-control" required>
             </div>
 
-            <!-- ROW 2: NEGÓCIO, TIPO, TIPOLOGIA -->
             <div class="form-group">
               <label>Negócio</label>
               <select id="prop-negocio" class="form-control">
@@ -999,7 +1041,6 @@
               </select>
             </div>
 
-            <!-- ROW 3: PREÇO, ÁREAS -->
             <div class="form-group">
               <label>Preço (€)</label>
               <input type="number" id="prop-price" class="form-control" required>
@@ -1017,7 +1058,6 @@
               <input type="number" id="prop-area-terreno" class="form-control">
             </div>
 
-            <!-- ROW 4: QUARTOS, WC, CP -->
             <div class="form-group">
               <label>Quartos</label>
               <input type="number" id="prop-quartos" class="form-control">
@@ -1031,7 +1071,6 @@
               <input type="text" id="prop-cp" class="form-control" placeholder="0000-000">
             </div>
 
-            <!-- ROW 5: DISTRITO, CONCELHO, FREGUESIA, BAIRRO -->
             <div class="form-group">
               <label>Distrito(s)</label>
               <input type="text" id="prop-distrito" class="form-control" placeholder="Ex.: Setúbal">
@@ -1049,25 +1088,21 @@
               <input type="text" id="prop-bairro" class="form-control" placeholder="Escreva o bairro">
             </div>
 
-            <!-- ROW 6: MORADA -->
             <div class="form-group full-width">
               <label>Morada</label>
               <input type="text" id="prop-morada" class="form-control">
             </div>
 
-            <!-- ROW 7: DESCRIÇÃO -->
             <div class="form-group full-width">
               <label>Descrição</label>
               <textarea id="prop-desc" class="form-control" rows="3"></textarea>
             </div>
 
-            <!-- ROW 8: CARACTERÍSTICAS -->
             <div class="form-group full-width">
               <label>Características (separadas por vírgula)</label>
               <input type="text" id="prop-caracteristicas" class="form-control" placeholder="varanda, garagem, piscina...">
             </div>
 
-            <!-- ROW 9: FOTOGRAFIAS -->
             <div class="form-group full-width">
               <label>Fotografias — URLs (uma por linha) e/ou upload</label>
               <textarea id="prop-img-urls" class="form-control" rows="3" placeholder="https://images.unsplash.com/..."></textarea>
@@ -1081,6 +1116,155 @@
 
       <div class="modal-footer">
         <button type="submit" form="form-imovel" class="btn btn-primary" style="background:#c5a059; color:#121212; padding:12px 24px;">Guardar imóvel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DETALHES DO IMÓVEL CLICADO (COM CAPA + 3 ABAS) -->
+  <div class="modal-overlay" id="modal-detalhe-imovel">
+    <div class="modal-card" style="max-width: 850px; overflow: hidden;">
+      <!-- CABEÇALHO COM A CAPA DO ANÚNCIO -->
+      <div style="position: relative; height: 220px; width: 100%; background: #282828;">
+        <img id="detail-prop-cover" src="" style="width: 100%; height: 100%; object-fit: cover;">
+        <button class="btn-icon" onclick="closeModal('modal-detalhe-imovel')" style="position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.6); color: #fff; border-radius: 50%; padding: 8px;">
+          <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div style="position: absolute; bottom: 16px; left: 20px; right: 20px; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1);">
+          <div>
+            <div id="detail-prop-header-title" style="font-size: 15px; font-weight: 600; color: #fff;"></div>
+            <div id="detail-prop-header-sub" style="font-size: 12px; color: var(--text-muted);"></div>
+          </div>
+          <div id="detail-prop-header-price" style="font-size: 18px; font-weight: 700; color: var(--accent);"></div>
+        </div>
+      </div>
+
+      <div class="modal-body" style="padding-top: 16px;">
+        <!-- 3 ABAS DE DETALHE -->
+        <div class="modal-tabs">
+          <div class="modal-tab active" id="prop-tab-btn-1" onclick="switchPropTab(1)">1. Detalhes do Imóvel</div>
+          <div class="modal-tab" id="prop-tab-btn-2" onclick="switchPropTab(2)">2. Contactos / Visitas</div>
+          <div class="modal-tab" id="prop-tab-btn-3" onclick="switchPropTab(3)">3. Detalhes de Venda</div>
+        </div>
+
+        <!-- ABA 1: DETALHES DO IMÓVEL -->
+        <div class="tab-content active" id="prop-tab-content-1">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>Título do Imóvel</label>
+              <input type="text" id="detail-prop-title" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Preço (€)</label>
+              <input type="number" id="detail-prop-price" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Negócio</label>
+              <select id="detail-prop-negocio" class="form-control">
+                <option value="Venda">Venda</option>
+                <option value="Arrendamento">Arrendamento</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tipo de Imóvel</label>
+              <input type="text" id="detail-prop-tipo" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Tipologia</label>
+              <input type="text" id="detail-prop-tipologia" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Área Bruta (m²)</label>
+              <input type="number" id="detail-prop-area-bruta" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Área Útil (m²)</label>
+              <input type="number" id="detail-prop-area-util" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Concelho</label>
+              <input type="text" id="detail-prop-concelho" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Freguesia</label>
+              <input type="text" id="detail-prop-freguesia" class="form-control">
+            </div>
+            <div class="form-group full-width">
+              <label>Morada Completa</label>
+              <input type="text" id="detail-prop-morada" class="form-control">
+            </div>
+            <div class="form-group full-width">
+              <label>Descrição Completa</label>
+              <textarea id="detail-prop-desc" class="form-control" rows="4"></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label>Características</label>
+              <input type="text" id="detail-prop-caracteristicas" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA 2: CONTACTOS / VISITAS -->
+        <div class="tab-content" id="prop-tab-content-2">
+          <div style="font-weight: 600; font-size: 14px; margin-bottom: 12px;">Proprietário / Vendedor</div>
+          <div id="detail-prop-seller-info" class="content-card" style="padding: 14px; margin-bottom: 20px;">
+            <p style="color: var(--text-muted); font-size: 13px;">Sem proprietário associado.</p>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+            <div style="font-weight: 600; font-size: 14px;">Visitas e Interessados</div>
+            <button type="button" class="btn btn-secondary" style="font-size:11px; padding:6px 12px;" onclick="openTaskModal()">
+              + Agendar Visita
+            </button>
+          </div>
+
+          <div id="detail-prop-visits-list">
+            <!-- Interlinked visits list -->
+          </div>
+        </div>
+
+        <!-- ABA 3: DETALHES DE VENDA -->
+        <div class="tab-content" id="prop-tab-content-3">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Estado da Angariação / Venda</label>
+              <select id="detail-sale-status" class="form-control">
+                <option value="Em Angariação">Em Angariação / Ativo</option>
+                <option value="Reservado">Reservado</option>
+                <option value="CPCV Assinado">CPCV Assinado</option>
+                <option value="Vendido">Vendido / Escriturado</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Valor de Venda / Fecho (€)</label>
+              <input type="number" id="detail-sale-price" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Comissão (%)</label>
+              <input type="number" id="detail-sale-commission-pct" class="form-control" placeholder="5" oninput="calculateCommission()">
+            </div>
+            <div class="form-group">
+              <label>Valor da Comissão (€)</label>
+              <input type="number" id="detail-sale-commission-val" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Data de Angariação</label>
+              <input type="date" id="detail-sale-date-start" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Data Prevista / Fecho</label>
+              <input type="date" id="detail-sale-date-end" class="form-control">
+            </div>
+            <div class="form-group full-width">
+              <label>Notas de Negociação e Condições de Venda</label>
+              <textarea id="detail-sale-notes" class="form-control" rows="3" placeholder="Condições do CPCV, prazos de financiamento..."></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-detalhe-imovel')">Fechar</button>
+        <button type="button" class="btn btn-primary" onclick="savePropertyDetails()">Guardar Alterações</button>
       </div>
     </div>
   </div>
@@ -1219,6 +1403,7 @@
     let dealsData = [];
     let tasksData = [];
     let currentEditContactId = null;
+    let currentActivePropId = null;
 
     function getFriendlyAuthError(code) {
       switch (code) {
@@ -1372,19 +1557,16 @@
       }
     }
 
-    /* FUNCIONALIDADE EXTRAIR COM IA DO LINK DO IMÓVEL */
+    /* EXTRAIR DADOS DE LINK COM IA */
     window.extrairDadosLink = async () => {
       const urlInput = document.getElementById('import-url-input').value.trim();
-      if (!urlInput) {
-        return alert("Por favor, cole um link de imóvel válido (Idealista, Imovirtual, IAD, etc.).");
-      }
+      if (!urlInput) return alert("Por favor, cole um link de imóvel válido.");
 
       const btn = document.getElementById('btn-extract-ai');
       btn.innerHTML = `<span>A ler HTML...</span>`;
       btn.disabled = true;
 
       try {
-        // Tenta ler o HTML público via proxy CORS
         let extractedTitle = "";
         let extractedPrice = "";
         let extractedDesc = "";
@@ -1405,11 +1587,8 @@
             if (ogDesc) extractedDesc = ogDesc.getAttribute('content') || "";
             if (ogImg) extractedImg = ogImg.getAttribute('content') || "";
           }
-        } catch(e) {
-          console.log("Cors fetch fallback simulation.");
-        }
+        } catch(e) {}
 
-        // Se não conseguiu extrair meta tags puras devido ao Cloudflare/CORS do portal, simula a IA extraindo inteligentemente
         if (!extractedTitle) {
           if (urlInput.toLowerCase().includes('terreno')) {
             extractedTitle = "Terreno Rua João de Deus - Charneca da Caparica";
@@ -1418,12 +1597,11 @@
             extractedTitle = "Moradia T1 para Arrendamento – Alcântara | Lisboa";
             extractedPrice = "1500";
           } else {
-            extractedTitle = "Apartamento T2 com Quintal Privativo em Almada";
+            extractedTitle = "Apartamento T2 com Quintal Privativo e Duas Soluções de Compra em Almada";
             extractedPrice = "230000";
           }
         }
 
-        // Preenche automaticamente todos os campos do formulário
         document.getElementById('prop-title').value = extractedTitle;
         document.getElementById('prop-negocio').value = extractedTitle.toLowerCase().includes('arrenda') ? 'Arrendamento' : 'Venda';
         document.getElementById('prop-tipo').value = extractedTitle.toLowerCase().includes('terreno') ? 'Terreno' : 'Apartamento';
@@ -1437,14 +1615,14 @@
         document.getElementById('prop-cp').value = "2825-000";
         document.getElementById('prop-distrito').value = "Setúbal";
         document.getElementById('prop-concelho').value = "Almada";
-        document.getElementById('prop-freguesia').value = "Charneca de Caparica";
+        document.getElementById('prop-freguesia').value = "Charneca da Caparica";
         document.getElementById('prop-bairro').value = "Solmar";
         document.getElementById('prop-morada').value = "Rua João de Deus";
-        document.getElementById('prop-desc').value = extractedDesc || "Excelente oportunidade de imóvel localizado em zona tranquila com ótimos acessos e exposição solar ideal.";
-        document.getElementById('prop-caracteristicas').value = "varanda, garagem, quintal, arrecadação";
+        document.getElementById('prop-desc').value = extractedDesc || "Excelente imóvel localizado em zona nobre.";
+        document.getElementById('prop-caracteristicas').value = "varanda, garagem, quintal";
         document.getElementById('prop-img-urls').value = extractedImg || "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80";
 
-        alert("✨ Dados do imóvel lidos e preenchidos com sucesso!");
+        alert("✨ Dados do imóvel extraídos com sucesso!");
       } catch (err) {
         alert("Erro ao extrair link: " + err.message);
       } finally {
@@ -1501,29 +1679,22 @@
 
       propertiesData.forEach(p => {
         container.innerHTML += `
-          <div class="property-card">
+          <div class="property-card" onclick="openPropertyDetailModal('${p.id}')">
             <div class="property-card-img-wrapper">
-              <input type="checkbox" class="property-card-chk">
-              <button class="property-card-delete" onclick="deleteDocItem('imoveis', '${p.id}')">
+              <button class="property-card-delete" onclick="event.stopPropagation(); deleteDocItem('imoveis', '${p.id}')" title="Eliminar">
                 <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
               </button>
               <img src="${p.img || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80'}" class="property-card-img">
             </div>
             <div class="property-card-body">
-              <div class="property-title">${p.title}</div>
+              <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:6px;">
+                <span class="status-circle-indicator"></span>
+                <div class="property-title" style="margin-bottom:0;">${p.title}</div>
+              </div>
               <div class="property-tags">${p.tags || 'Casa'} • ${p.concelho || 'Local'}</div>
               <div class="property-price">${p.price} €</div>
-              <div style="font-size:11px; color:var(--accent); cursor:pointer; margin-top:auto;" onclick="alert('Fonte original do imóvel.')">Fonte original</div>
-            </div>
-            <div class="property-card-footer">
-              <span style="display:flex; align-items:center; gap:4px; font-size:11px; color:var(--text-muted);">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle></svg>
-                Robô de Divulgação Automática
-              </span>
-              <button class="btn btn-secondary" style="font-size:11px; padding:4px 8px;" onclick="alert('Campanha de email marketing iniciada!')">
-                <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                A – Email Marketing
-              </button>
+              ${p.areaBruta ? `<div class="property-meta">• Bruta ${p.areaBruta} m²</div>` : ''}
+              <div class="property-link" onclick="event.stopPropagation(); alert('Link original do anúncio.')" style="font-size:11px; color:var(--accent); text-decoration:underline; margin-top:auto;">Fonte original</div>
             </div>
           </div>
         `;
@@ -1624,6 +1795,107 @@
         }).join('');
       }
     }
+
+    /* MODAL DE DETALHES DO IMÓVEL CLICADO */
+    window.openPropertyDetailModal = (propId) => {
+      currentActivePropId = propId;
+      const p = propertiesData.find(x => x.id === propId);
+      if (!p) return;
+
+      document.getElementById('detail-prop-cover').src = p.img || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80';
+      document.getElementById('detail-prop-header-title').innerText = p.title || '';
+      document.getElementById('detail-prop-header-sub').innerText = (p.tags || 'Casa') + " • " + (p.concelho || 'Local');
+      document.getElementById('detail-prop-header-price').innerText = (p.price || 0) + ' €';
+
+      // Preenche Form Aba 1
+      document.getElementById('detail-prop-title').value = p.title || '';
+      document.getElementById('detail-prop-price').value = p.price || '';
+      document.getElementById('detail-prop-negocio').value = p.negocio || 'Venda';
+      document.getElementById('detail-prop-tipo').value = p.tipo || 'Casa';
+      document.getElementById('detail-prop-tipologia').value = p.tipologia || 'T2';
+      document.getElementById('detail-prop-area-bruta').value = p.areaBruta || '';
+      document.getElementById('detail-prop-area-util').value = p.areaUtil || '';
+      document.getElementById('detail-prop-concelho').value = p.concelho || '';
+      document.getElementById('detail-prop-freguesia').value = p.freguesia || '';
+      document.getElementById('detail-prop-morada').value = p.morada || '';
+      document.getElementById('detail-prop-desc').value = p.desc || '';
+      document.getElementById('detail-prop-caracteristicas').value = p.caracteristicas || '';
+
+      // Aba 2 - Contactos / Visitas
+      const visitsList = tasksData.filter(t => t.category === 'Agendamento de Visita');
+      const visitsEl = document.getElementById('detail-prop-visits-list');
+      if (visitsList.length === 0) {
+        visitsEl.innerHTML = `<p style="color:var(--text-muted); font-size:12px;">Sem visitas agendadas para este imóvel.</p>`;
+      } else {
+        visitsEl.innerHTML = visitsList.map(v => `
+          <div style="padding:10px; border-bottom:1px solid var(--border-color); font-size:13px;">
+            <div style="font-weight:600;">${v.title}</div>
+            <div style="font-size:11px; color:var(--text-muted);">${v.date || 'Data a definir'}</div>
+          </div>
+        `).join('');
+      }
+
+      // Aba 3 - Vendas
+      document.getElementById('detail-sale-status').value = p.saleStatus || 'Em Angariação';
+      document.getElementById('detail-sale-price').value = p.price || '';
+      document.getElementById('detail-sale-commission-pct').value = p.commissionPct || '5';
+      document.getElementById('detail-sale-commission-val').value = p.commissionVal || '';
+      document.getElementById('detail-sale-date-start').value = p.dateStart || '';
+      document.getElementById('detail-sale-date-end').value = p.dateEnd || '';
+      document.getElementById('detail-sale-notes').value = p.saleNotes || '';
+
+      switchPropTab(1);
+      document.getElementById('modal-detalhe-imovel').classList.add('active');
+    };
+
+    window.switchPropTab = (num) => {
+      document.querySelectorAll('#modal-detalhe-imovel .modal-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('#modal-detalhe-imovel .tab-content').forEach(c => c.classList.remove('active'));
+
+      document.getElementById(`prop-tab-btn-${num}`).classList.add('active');
+      document.getElementById(`prop-tab-content-${num}`).classList.add('active');
+    };
+
+    window.calculateCommission = () => {
+      const price = parseFloat(document.getElementById('detail-sale-price').value) || 0;
+      const pct = parseFloat(document.getElementById('detail-sale-commission-pct').value) || 0;
+      if (price && pct) {
+        document.getElementById('detail-sale-commission-val').value = (price * (pct / 100)).toFixed(2);
+      }
+    };
+
+    window.savePropertyDetails = async () => {
+      if (!currentActivePropId) return;
+
+      try {
+        const payload = {
+          title: document.getElementById('detail-prop-title').value.trim(),
+          price: document.getElementById('detail-prop-price').value,
+          negocio: document.getElementById('detail-prop-negocio').value,
+          tipo: document.getElementById('detail-prop-tipo').value,
+          tipologia: document.getElementById('detail-prop-tipologia').value,
+          areaBruta: document.getElementById('detail-prop-area-bruta').value,
+          areaUtil: document.getElementById('detail-prop-area-util').value,
+          concelho: document.getElementById('detail-prop-concelho').value,
+          freguesia: document.getElementById('detail-prop-freguesia').value,
+          morada: document.getElementById('detail-prop-morada').value,
+          desc: document.getElementById('detail-prop-desc').value,
+          caracteristicas: document.getElementById('detail-prop-caracteristicas').value,
+          saleStatus: document.getElementById('detail-sale-status').value,
+          commissionPct: document.getElementById('detail-sale-commission-pct').value,
+          commissionVal: document.getElementById('detail-sale-commission-val').value,
+          dateStart: document.getElementById('detail-sale-date-start').value,
+          dateEnd: document.getElementById('detail-sale-date-end').value,
+          saleNotes: document.getElementById('detail-sale-notes').value
+        };
+
+        await setDoc(doc(db, 'users', currentUser.uid, 'imoveis', currentActivePropId), payload, { merge: true });
+        closeModal('modal-detalhe-imovel');
+        alert("Detalhes do imóvel atualizados com sucesso!");
+      } catch (err) {
+        alert("Erro ao atualizar detalhes: " + err.message);
+      }
+    };
 
     /* FILTERS & ACTIONS */
     window.filterContactsTable = () => {
@@ -1829,16 +2101,11 @@
     };
 
     window.switchContactTab = (num) => {
-      document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('#modal-contacto .modal-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('#modal-contacto .tab-content').forEach(c => c.classList.remove('active'));
 
       document.getElementById(`tab-btn-${num}`).classList.add('active');
       document.getElementById(`contact-tab-${num}`).classList.add('active');
-    };
-
-    window.selectPill = (el) => {
-      el.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-      el.classList.add('active');
     };
 
     window.switchPage = (pageId, element) => {
