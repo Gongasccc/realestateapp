@@ -8,6 +8,7 @@
   
   <style>
     :root {
+      /* TEMA ESCURO ESTILO SPOTIFY + DOURADO SUBTIL */
       --bg-color: #121212;
       --card-bg: #181818;
       --sidebar-bg: #000000;
@@ -301,6 +302,7 @@
     .property-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; line-height: 1.4; }
     .property-tags { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
     .property-price { font-size: 18px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+    .property-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 
     /* DATA TABLE */
     .table-responsive { width: 100%; overflow-x: auto; }
@@ -366,43 +368,10 @@
 
     .modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
 
-    /* SUB-TABS (ESTRUTURAIS, FÍSICAS, COMODIDADES) */
-    .sub-tabs {
-      display: flex;
-      background: var(--input-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 20px;
-      gap: 4px;
-    }
-
-    .sub-tab {
-      flex: 1;
-      text-align: center;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .sub-tab.active {
-      background: var(--card-bg);
-      color: var(--text-main);
-      font-weight: 600;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-
-    .tab-content, .sub-tab-content { display: none; }
-    .tab-content.active, .sub-tab-content.active { display: block; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
     .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .form-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .form-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group.full-width { grid-column: 1 / -1; }
     .form-group label { font-size: 12px; font-weight: 600; color: var(--text-main); }
@@ -411,20 +380,6 @@
       padding: 10px 14px; border: 1px solid var(--border-color);
       border-radius: 8px; font-size: 13px; outline: none; width: 100%;
       background: var(--input-bg); color: var(--text-main);
-    }
-
-    /* PILL SELECTORS */
-    .pill-selector-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
-
-    .pill-btn {
-      padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color);
-      background: var(--input-bg); color: var(--text-main); font-size: 12px;
-      cursor: pointer; transition: all 0.2s;
-    }
-
-    .pill-btn.active {
-      background: var(--accent); border-color: var(--accent);
-      color: #121212; font-weight: 600;
     }
 
     /* CAIXA DE EXTRAÇÃO IA DO IMÓVEL */
@@ -441,6 +396,7 @@
 
     .import-ai-input-row { display: flex; gap: 10px; }
     .import-ai-input-row input { flex: 1; border-color: rgba(197, 160, 89, 0.4); }
+    .import-ai-subtext { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
 
     /* SWITCH TOGGLE */
     .switch-row {
@@ -492,7 +448,7 @@
     @media (max-width: 799px) {
       .mobile-menu-toggle { display: block; }
       .top-search-box { display: none; }
-      .form-grid, .form-grid-3, .form-grid-4 { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
       .modal-card { max-height: 92vh; border-radius: 20px 20px 0 0; }
       .modal-overlay { align-items: flex-end; padding: 0; }
     }
@@ -769,8 +725,9 @@
           </div>
         </section>
 
-        <!-- PAGE DETALHE DO IMÓVEL (QUANDO CLICADO) -->
+        <!-- PAGE DETALHE DO IMÓVEL (COM SETA À ESQUERDA, TÍTULO, CAPA EM BAIXO E ABAS ABAIXO) -->
         <section id="page-detalhe-imovel" class="page">
+          <!-- CABEÇALHO COM SETA E NOME -->
           <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
             <button class="btn-icon" onclick="switchPage('page-imoveis')" style="background:var(--card-bg); border:1px solid var(--border-color); padding:8px; border-radius:10px;">
               <svg class="icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
@@ -778,16 +735,19 @@
             <h2 id="page-detail-prop-header-title" style="font-size:18px; font-weight:600; margin:0;">Nome do Imóvel</h2>
           </div>
 
-          <div style="width:100%; height:260px; border-radius:var(--card-radius); overflow:hidden; margin-bottom:20px; border:1px solid var(--border-color); background:#282828;">
+          <!-- CAPA DO ANÚNCIO LOGO ABAIXO DO TÍTULO -->
+          <div style="width:100%; height:280px; border-radius:var(--card-radius); overflow:hidden; margin-bottom:20px; border:1px solid var(--border-color); background:#282828;">
             <img id="detail-prop-cover-full" src="" style="width:100%; height:100%; object-fit:cover;">
           </div>
 
+          <!-- ABAS ABAIXO DA CAPA -->
           <div class="modal-tabs" style="margin-bottom:20px;">
             <div class="modal-tab active" id="prop-tab-btn-1" onclick="switchPropTab(1)">1. Detalhes do Imóvel</div>
             <div class="modal-tab" id="prop-tab-btn-2" onclick="switchPropTab(2)">2. Contactos / Visitas</div>
             <div class="modal-tab" id="prop-tab-btn-3" onclick="switchPropTab(3)">3. Detalhes de Venda</div>
           </div>
 
+          <!-- CONTEÚDO FORMATADO LIMPO DAS ABAS -->
           <div class="content-card">
             <!-- ABA 1: DETALHES -->
             <div class="tab-content active" id="prop-tab-content-1">
@@ -1024,7 +984,7 @@
     </div>
   </div>
 
-  <!-- MODAL: CONTACT DETALHADO (3 ABAS + OPÇÕES COMPLETAS DAS IMAGENS REAIS) -->
+  <!-- MODAL: CONTACT DETALHADO -->
   <div class="modal-overlay" id="modal-contacto">
     <div class="modal-card">
       <div class="modal-header">
@@ -1042,7 +1002,7 @@
         <form id="form-contacto" onsubmit="saveContact(event)">
           <input type="hidden" id="contact-id">
 
-          <!-- TAB 1: DADOS GERAIS (Imagem 1 das novas fotos) -->
+          <!-- TAB 1: DADOS GERAIS -->
           <div class="tab-content active" id="contact-tab-1">
             <div class="form-grid">
               <div class="form-group full-width">
@@ -1133,16 +1093,14 @@
             </div>
           </div>
 
-          <!-- TAB 2: IMÓVEL COM 3 SUB-ABAS (Imagens 2, 3 e 4 das novas fotos) -->
+          <!-- TAB 2: IMÓVEL COM 3 SUB-ABAS -->
           <div class="tab-content" id="contact-tab-2">
-            <!-- SUB-ABAS DE IMÓVEL -->
             <div class="sub-tabs">
               <div class="sub-tab active" id="imovel-subtab-btn-1" onclick="switchImovelSubTab('estruturais')">Estruturais</div>
               <div class="sub-tab" id="imovel-subtab-btn-2" onclick="switchImovelSubTab('fisicas')">Físicas</div>
               <div class="sub-tab" id="imovel-subtab-btn-3" onclick="switchImovelSubTab('comodidades')">Comodidades</div>
             </div>
 
-            <!-- SUB-ABA 1: ESTRUTURAIS (Imagem 2) -->
             <div class="sub-tab-content active" id="imovel-subtab-estruturais">
               <div class="form-group full-width" style="margin-bottom:14px;">
                 <label>Tipo de negócio</label>
@@ -1226,7 +1184,6 @@
               </div>
             </div>
 
-            <!-- SUB-ABA 2: FÍSICAS (Imagem 3) -->
             <div class="sub-tab-content" id="imovel-subtab-fisicas">
               <div class="form-grid" style="margin-bottom:14px;">
                 <div class="form-group">
@@ -1295,7 +1252,6 @@
               </div>
             </div>
 
-            <!-- SUB-ABA 3: COMODIDADES (Imagem 4) -->
             <div class="sub-tab-content" id="imovel-subtab-comodidades">
               <div class="form-group full-width" style="margin-bottom:14px;">
                 <label>Espaço exterior</label>
@@ -1350,7 +1306,7 @@
     </div>
   </div>
 
-  <!-- MODAL: NOVO IMÓVEL (CADASTRAR) -->
+  <!-- MODAL: NOVO IMÓVEL -->
   <div class="modal-overlay" id="modal-imovel">
     <div class="modal-card">
       <div class="modal-header">
@@ -1775,7 +1731,7 @@
       }
     }
 
-    /* EXTRAIR DADOS DE LINK COM IA E IMAGEM REAL */
+    /* EXTRAIR DADOS DE LINK COM IA E IMAGEM REAL DA CAPA */
     window.extrairDadosLink = async () => {
       const urlInput = document.getElementById('import-url-input').value.trim();
       if (!urlInput) return alert("Por favor, cole um link de imóvel válido.");
@@ -1784,76 +1740,86 @@
       btn.innerHTML = `<span>A extrair...</span>`;
       btn.disabled = true;
 
-      try {
-        let extractedTitle = "";
-        let extractedPrice = "";
-        let extractedDesc = "";
-        let extractedImg = "";
+      let extractedTitle = "";
+      let extractedPrice = "";
+      let extractedDesc = "";
+      let extractedImg = "";
 
+      const proxies = [
+        `https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`,
+        `https://corsproxy.io/?${encodeURIComponent(urlInput)}`
+      ];
+
+      for (const proxyUrl of proxies) {
         try {
-          const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(urlInput)}`);
-          if (response.ok) {
-            const htmlText = await response.text();
-            const parser = new DOMParser();
-            const docParsed = parser.parseFromString(htmlText, 'text/html');
+          const res = await fetch(proxyUrl);
+          if (res.ok) {
+            let htmlText = "";
+            if (proxyUrl.includes('allorigins.win/get')) {
+              const json = await res.json();
+              htmlText = json.contents;
+            } else {
+              htmlText = await res.text();
+            }
 
-            const ogTitle = docParsed.querySelector('meta[property="og:title"]');
-            const ogDesc = docParsed.querySelector('meta[property="og:description"]');
-            const ogImg = docParsed.querySelector('meta[property="og:image"]');
+            if (htmlText) {
+              const parser = new DOMParser();
+              const docParsed = parser.parseFromString(htmlText, 'text/html');
 
-            if (ogTitle) extractedTitle = ogTitle.getAttribute('content') || "";
-            if (ogDesc) extractedDesc = ogDesc.getAttribute('content') || "";
-            if (ogImg) extractedImg = ogImg.getAttribute('content') || "";
+              const ogImg = docParsed.querySelector('meta[property="og:image"]') || 
+                            docParsed.querySelector('meta[name="twitter:image"]') ||
+                            docParsed.querySelector('meta[itemprop="image"]');
+              if (ogImg) extractedImg = ogImg.getAttribute('content') || ogImg.getAttribute('href') || "";
+
+              const ogTitle = docParsed.querySelector('meta[property="og:title"]') ||
+                              docParsed.querySelector('meta[name="twitter:title"]') ||
+                              docParsed.querySelector('title');
+              if (ogTitle) extractedTitle = ogTitle.getAttribute('content') || ogTitle.innerText || "";
+
+              const ogDesc = docParsed.querySelector('meta[property="og:description"]') ||
+                             docParsed.querySelector('meta[name="description"]');
+              if (ogDesc) extractedDesc = ogDesc.getAttribute('content') || "";
+
+              const priceMatch = htmlText.match(/(\d{1,3}(?:\.\d{3})*|\d+)\s*€/);
+              if (priceMatch) extractedPrice = priceMatch[1].replace(/\./g, '');
+
+              if (extractedImg || extractedTitle) break;
+            }
           }
-        } catch(e) {}
-
-        if (!extractedTitle) {
-          if (urlInput.toLowerCase().includes('terreno')) {
-            extractedTitle = "Terreno Rua João de Deus - Charneca da Caparica";
-            extractedPrice = "4080";
-            extractedImg = "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80";
-          } else if (urlInput.toLowerCase().includes('moradia') || urlInput.toLowerCase().includes('alcantara')) {
-            extractedTitle = "Moradia T1 para Arrendamento – Alcântara | Lisboa";
-            extractedPrice = "1500";
-            extractedImg = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80";
-          } else {
-            extractedTitle = "Apartamento T2 com Quintal Privativo e Duas Soluções de Compra em Almada";
-            extractedPrice = "230000";
-            extractedImg = "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80";
-          }
+        } catch (err) {
+          console.warn("Proxy attempt failed:", err);
         }
-
-        if (!extractedImg) {
-          extractedImg = "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80";
-        }
-
-        document.getElementById('prop-title').value = extractedTitle;
-        document.getElementById('prop-negocio').value = extractedTitle.toLowerCase().includes('arrenda') ? 'Arrendamento' : 'Venda';
-        document.getElementById('prop-tipo').value = extractedTitle.toLowerCase().includes('terreno') ? 'Terreno' : 'Apartamento';
-        document.getElementById('prop-tipologia').value = extractedTitle.includes('T1') ? 'T1' : 'T2';
-        document.getElementById('prop-price').value = extractedPrice || "230000";
-        document.getElementById('prop-area-bruta').value = "85";
-        document.getElementById('prop-area-util').value = "72";
-        document.getElementById('prop-area-terreno').value = "120";
-        document.getElementById('prop-quartos').value = "2";
-        document.getElementById('prop-wc').value = "1";
-        document.getElementById('prop-cp').value = "2825-000";
-        document.getElementById('prop-distrito').value = "Setúbal";
-        document.getElementById('prop-concelho').value = "Almada";
-        document.getElementById('prop-freguesia').value = "Charneca da Caparica";
-        document.getElementById('prop-bairro').value = "Solmar";
-        document.getElementById('prop-morada').value = "Rua João de Deus";
-        document.getElementById('prop-desc').value = extractedDesc || "Excelente oportunidade de imóvel com fantástica área e ótima localização.";
-        document.getElementById('prop-caracteristicas').value = "varanda, garagem, quintal";
-        document.getElementById('prop-img-urls').value = extractedImg;
-
-        alert("Dados e imagem do imóvel extraídos com sucesso!");
-      } catch (err) {
-        alert("Erro ao extrair link: " + err.message);
-      } finally {
-        btn.innerHTML = `<span>Extrair</span>`;
-        btn.disabled = false;
       }
+
+      if (extractedImg && !extractedImg.startsWith('http')) {
+        try {
+          const urlObj = new URL(urlInput);
+          extractedImg = urlObj.origin + (extractedImg.startsWith('/') ? '' : '/') + extractedImg;
+        } catch(e){}
+      }
+
+      if (!extractedImg) {
+        extractedImg = "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80";
+      }
+
+      if (extractedTitle) document.getElementById('prop-title').value = extractedTitle.split('|')[0].split('-')[0].trim();
+      if (extractedPrice) document.getElementById('prop-price').value = extractedPrice;
+      if (extractedDesc) document.getElementById('prop-desc').value = extractedDesc.trim();
+      document.getElementById('prop-img-urls').value = extractedImg;
+
+      const fullText = (extractedTitle + " " + extractedDesc).toLowerCase();
+      if (fullText.includes('arrenda')) document.getElementById('prop-negocio').value = 'Arrendamento';
+      else document.getElementById('prop-negocio').value = 'Venda';
+
+      if (fullText.includes('terreno')) document.getElementById('prop-tipo').value = 'Terreno';
+      else if (fullText.includes('moradia')) document.getElementById('prop-tipo').value = 'Moradia';
+      else if (fullText.includes('apartamento')) document.getElementById('prop-tipo').value = 'Apartamento';
+      else document.getElementById('prop-tipo').value = 'Casa';
+
+      btn.innerHTML = `<span>Extrair</span>`;
+      btn.disabled = false;
+
+      alert("Imagem de capa e dados do imóvel extraídos com sucesso!");
     };
 
     /* RENDER FUNCTIONS */
