@@ -307,6 +307,12 @@
       background: var(--card-bg);
     }
 
+    .filter-select.active-filter {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
     /* BUTTONS */
     .btn {
       padding: 10px 18px;
@@ -345,6 +351,148 @@
       border: 1px solid #fde047;
       color: #854d0e;
       font-size: 12px;
+    }
+
+    /* PROPERTY CARDS GRID */
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .property-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .property-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .property-card-img-wrapper {
+      position: relative;
+      height: 200px;
+      width: 100%;
+      background: #e2e8f0;
+    }
+
+    .property-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .property-card-checkbox {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .property-card-delete {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 6px;
+      padding: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: color 0.2s, background 0.2s;
+    }
+
+    .property-card-delete:hover {
+      color: var(--red-status);
+      background: #ffffff;
+    }
+
+    .property-card-body {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .property-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .property-tags {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .property-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .property-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .property-link {
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: underline;
+      cursor: pointer;
+      margin-top: auto;
+      margin-bottom: 12px;
+    }
+
+    .property-card-footer {
+      border-top: 1px solid var(--border-color);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fafafa;
+    }
+
+    .robot-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .btn-email-mkt {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-email-mkt:hover {
+      background: var(--bg-color);
     }
 
     /* DATA TABLE */
@@ -583,6 +731,10 @@
       .form-grid {
         grid-template-columns: 1fr;
       }
+
+      .property-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -621,7 +773,7 @@
         Tarefas
       </div>
       <div class="sidebar-item" onclick="switchPage('page-relatorios', this)">
-        <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+        <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="14"></line></svg>
         Relatórios
       </div>
       <div class="sidebar-item" onclick="switchPage('page-configuracoes', this)">
@@ -801,6 +953,52 @@
         </div>
       </section>
 
+      <!-- PAGE: IMÓVEIS -->
+      <section id="page-imoveis" class="page">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Dashboard de Imóveis</h1>
+            <p class="page-subtitle">Cadastro de imóveis, extração via link e disparo automático de campanha.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openPropertyModal()">+ Cadastrar Novo Imóvel</button>
+        </div>
+
+        <!-- FILTROS DE LOCALIZAÇÃO / COMPARADOR DE MERCADO -->
+        <div class="filter-bar">
+          <div style="width: 100%; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px;">Filtros de localização / Comparador de mercado</div>
+          <div class="filter-item">
+            <label>Distrito</label>
+            <select class="filter-select" id="filter-distrito" onchange="filterProperties()">
+              <option value="Todos">Todos</option>
+              <option value="Lisboa">Lisboa</option>
+              <option value="Setúbal">Setúbal</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <label>Concelho</label>
+            <select class="filter-select active-filter" id="filter-concelho" onchange="filterProperties()">
+              <option value="Todos">Todos</option>
+              <option value="Almada">Almada</option>
+              <option value="Lisboa">Lisboa</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <label>Freguesia</label>
+            <select class="filter-select" id="filter-freguesia" onchange="filterProperties()">
+              <option value="Todas">Todas</option>
+              <option value="Estrela">Estrela</option>
+              <option value="Laranjeiro e Feijó">Laranjeiro e Feijó</option>
+              <option value="Alcântara">Alcântara</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PROPERTY CARDS GRID -->
+        <div class="property-grid" id="property-grid-container">
+          <!-- Inserido dinamicamente via JS -->
+        </div>
+      </section>
+
       <!-- PAGE: TAREFAS -->
       <section id="page-tarefas" class="page">
         <div class="page-header">
@@ -834,7 +1032,6 @@
       </section>
 
       <!-- PÁGINAS GENÉRICAS -->
-      <section id="page-imoveis" class="page"><h1 class="page-title">Imóveis</h1></section>
       <section id="page-pipeline" class="page"><h1 class="page-title">Pipeline</h1></section>
       <section id="page-relatorios" class="page"><h1 class="page-title">Relatórios</h1></section>
       <section id="page-configuracoes" class="page"><h1 class="page-title">Configurações</h1></section>
@@ -987,6 +1184,55 @@
     </div>
   </div>
 
+  <!-- MODAL: CADASTRAR IMÓVEL -->
+  <div class="modal-overlay" id="modal-imovel">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 style="font-size: 16px; font-weight: 600;">Cadastrar Novo Imóvel</h3>
+        <button class="btn-icon" onclick="closePropertyModal()">
+          <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label>Título do Imóvel</label>
+            <input type="text" id="prop-title" class="form-control" placeholder="ex: Moradia T1 para Arrendamento – Alcântara">
+          </div>
+          <div class="form-group">
+            <label>Tipo & Tipologia</label>
+            <input type="text" id="prop-tags" class="form-control" placeholder="ex: Casa · T1 · Estrela">
+          </div>
+          <div class="form-group">
+            <label>Preço (€)</label>
+            <input type="text" id="prop-price" class="form-control" placeholder="ex: 1500 €">
+          </div>
+          <div class="form-group">
+            <label>Área / Especificações</label>
+            <input type="text" id="prop-meta" class="form-control" placeholder="ex: · Bruta 49 m²">
+          </div>
+          <div class="form-group">
+            <label>Concelho</label>
+            <select id="prop-concelho" class="form-control">
+              <option value="Lisboa">Lisboa</option>
+              <option value="Almada">Almada</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label>URL da Imagem</label>
+            <input type="text" id="prop-img" class="form-control" placeholder="https://images.unsplash.com/...">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closePropertyModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveProperty()">Salvar Imóvel</button>
+      </div>
+    </div>
+  </div>
+
   <!-- SCRIPT DE LÓGICA DO CRM -->
   <script>
     // ESTADO DA APLICAÇÃO
@@ -997,6 +1243,35 @@
         { id: 3, name: 'Patricia Nunes', email: '—', phone: '351913220983', type: 'Comprador', origin: 'idealista', address: '' },
         { id: 4, name: 'Paulo Jorge da Silva', email: 'pjdasilva01@gmail.com', phone: '34690208628', type: 'Vendedor', origin: 'Particular', address: '' },
         { id: 5, name: 'Gonçalo Roberto Machado Dos Santos Crispim', email: 'goncalo.1.crispim@gmail.com', phone: '351961774682', type: 'Vendedor', origin: 'Outro', address: '' }
+      ],
+      properties: [
+        {
+          id: 1,
+          title: 'Moradia T1 para Arrendamento – Alcântara | Lisboa',
+          tags: 'Casa · T1 · Estrela',
+          price: '1500 €',
+          meta: '· Bruta 49 m²',
+          concelho: 'Lisboa',
+          img: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+          id: 2,
+          title: 'Apartamento T2 com Quintal Privativo e Duas Soluções de Compra em Almada',
+          tags: 'Apartamento · T2 · Laranjeiro e Feijó',
+          price: '230 000 €',
+          meta: '',
+          concelho: 'Almada',
+          img: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+          id: 3,
+          title: 'Venda casa em Lisboa: casa/moradia 1 quarto 49 m²',
+          tags: 'Casa · T1 · Estrela',
+          price: '290 000 €',
+          meta: '· Bruta 49 m²',
+          concelho: 'Lisboa',
+          img: 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80'
+        }
       ],
       tasks: [
         { id: 1, title: 'Escritura - previsão até 5 meses após a assinatura do CPCV', status: 'Concluída', category: 'Assinatura de CPCV', user: 'Sara Maria Teixeira Valente da Cruz', target: 'Manuel Luís Vieira', date: '24/07/2026, 16:00:00' },
@@ -1037,6 +1312,87 @@
       document.getElementById('kpi-contacts').innerText = appState.contacts.length;
     }
 
+    // RENDERIZAR GRID DE IMÓVEIS
+    function renderProperties() {
+      const container = document.getElementById('property-grid-container');
+      const concelhoFilter = document.getElementById('filter-concelho').value;
+      container.innerHTML = '';
+
+      const filteredProps = appState.properties.filter(p => {
+        if (concelhoFilter === 'Todos') return true;
+        return p.concelho === concelhoFilter;
+      });
+
+      filteredProps.forEach(p => {
+        container.innerHTML += `
+          <div class="property-card">
+            <div class="property-card-img-wrapper">
+              <input type="checkbox" class="property-card-checkbox">
+              <button class="property-card-delete" onclick="deleteProperty(${p.id})">
+                <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              </button>
+              <img src="${p.img}" class="property-card-img" alt="Foto do Imóvel">
+            </div>
+            <div class="property-card-body">
+              <div class="property-title">${p.title}</div>
+              <div class="property-tags">${p.tags}</div>
+              <div class="property-price">${p.price}</div>
+              ${p.meta ? `<div class="property-meta">${p.meta}</div>` : ''}
+              <div class="property-link">Fonte original</div>
+            </div>
+            <div class="property-card-footer">
+              <div class="robot-tag">
+                <svg class="icon" style="color:var(--text-muted);" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path></svg>
+                Robô de Divulgação Automática
+              </div>
+              <button class="btn-email-mkt" onclick="alert('Disparar campanha de Email Marketing para este imóvel!')">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                A – Email Marketing
+              </button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function filterProperties() {
+      renderProperties();
+    }
+
+    function openPropertyModal() {
+      document.getElementById('modal-imovel').classList.add('active');
+    }
+
+    function closePropertyModal() {
+      document.getElementById('modal-imovel').classList.remove('active');
+    }
+
+    function saveProperty() {
+      const title = document.getElementById('prop-title').value;
+      const price = document.getElementById('prop-price').value;
+      if (!title || !price) return alert('Por favor insira um título e preço.');
+
+      appState.properties.push({
+        id: Date.now(),
+        title: title,
+        tags: document.getElementById('prop-tags').value || 'Casa · T1',
+        price: price,
+        meta: document.getElementById('prop-meta').value || '',
+        concelho: document.getElementById('prop-concelho').value || 'Lisboa',
+        img: document.getElementById('prop-img').value || 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80'
+      });
+
+      renderProperties();
+      closePropertyModal();
+    }
+
+    function deleteProperty(id) {
+      if (confirm('Deseja apagar este imóvel do dashboard?')) {
+        appState.properties = appState.properties.filter(p => p.id !== id);
+        renderProperties();
+      }
+    }
+
     // RENDERIZAR TAREFAS
     function renderTasks() {
       const container = document.getElementById('tasks-list-container');
@@ -1075,7 +1431,7 @@
       const pageTitles = {
         'page-dashboard': 'Dashboard',
         'page-contactos': 'Contactos',
-        'page-imoveis': 'Imóveis',
+        'page-imoveis': 'Dashboard de Imóveis',
         'page-pipeline': 'Pipeline',
         'page-tarefas': 'Tarefas',
         'page-relatorios': 'Relatórios',
@@ -1088,7 +1444,7 @@
       document.getElementById('sidebar').classList.toggle('open');
     }
 
-    // CONTROLOS DO MODAL
+    // CONTROLOS DO MODAL DE CONTACTOS
     function openContactModal(contactId = null) {
       appState.currentEditContactId = contactId;
       const modal = document.getElementById('modal-contacto');
@@ -1172,6 +1528,7 @@
     // INICIALIZAÇÃO
     window.addEventListener('DOMContentLoaded', () => {
       renderContacts();
+      renderProperties();
       renderTasks();
 
       // PILL BUTTON TOGGLE
